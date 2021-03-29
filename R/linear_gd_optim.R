@@ -24,7 +24,7 @@ linear_gd_optim <- function(par, X, Y,
   it <- 1
   err <- 1
 
-  upd <- vector(length = I)
+  upd <- rep(0,I)
 
   while (err > tolerance & it < maxit) {
 

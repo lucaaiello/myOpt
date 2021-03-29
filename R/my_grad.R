@@ -14,11 +14,11 @@ my_grad <- function(par, X, Y, verbose = TRUE){
 
   N <- length(Y)
   I <- dim(X)[2]
-  grad <- vector(length = I)
+  grad <- rep(0,I)
 
   for (i in 1:I) {
     for (n in 1:N) {
-      grad[i] <- grad[i] + 2 * (Y[n] - X[n,]%*%par) * (-X[n,i])
+      grad[i] <- grad[i] + 2/N * (Y[n] - X[n,]%*%par) * (-X[n,i])
     }
   }
 
