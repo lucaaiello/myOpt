@@ -22,4 +22,6 @@ my_grad <- function(par, X, Y){
     }
   }
 
+  return(grad)
+
 }

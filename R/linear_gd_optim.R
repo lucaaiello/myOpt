@@ -43,8 +43,6 @@ linear_gd_optim <- function(par, X, Y,
 
   }
 
-
-
-
+  return(upd)
 
 }
