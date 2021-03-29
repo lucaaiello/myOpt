@@ -79,9 +79,7 @@ usethis::use_data_raw( name = "my_dataset", open = FALSE )
 
 # Tests
 ## Add one line by test you want to create
-usethis::use_test( "division" )
-usethis::use_test( "square_root" )
-
+usethis::use_test( "linear_gd_optim" )
 
 
 ## Vignette
