@@ -16,7 +16,7 @@
 
 
 linear_gd_optim <- function(par, X, Y,
-                            tolerance=1e-3, maxit=10000, stepsize=1e-3,
+                            tolerance=1e-6, maxit=10000, stepsize=1e-3,
                             verbose=T){
 
   I <- dim(X)[2]
