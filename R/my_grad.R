@@ -18,7 +18,7 @@ my_grad <- function(par, X, Y){
 
   for (i in 1:I) {
     for (n in 1:N) {
-      grad[i] <- grad[i] + 2 * (Y[n] - X[n,]%*%beta) * (-X[n,i])
+      grad[i] <- grad[i] + 2 * (Y[n] - X[n,]%*%par) * (-X[n,i])
     }
   }
 

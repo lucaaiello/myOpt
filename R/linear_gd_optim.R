@@ -32,7 +32,7 @@ linear_gd_optim <- function(par, X, Y,
 
     for (i in 1:I) {
 
-      upd[i] <- par[i] - stepsize * gradient[i]
+      upd[i] <- par[i] - stepsize * grad[i]
 
     }
 
