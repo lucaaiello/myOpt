@@ -10,11 +10,11 @@
 #' @export
 #'
 
-my_grad <- function(par, X, Y){
+my_grad <- function(par, X, Y, verbose = TRUE){
 
   N <- length(Y)
   I <- dim(X)[2]
-  grad <- c()
+  grad <- vector(length = I)
 
   for (i in 1:I) {
     for (n in 1:N) {
