@@ -22,7 +22,7 @@ linear_gd_optim <- function(par, X, Y,
   I <- dim(X)[2]
 
   it <- 1
-  err <- 0
+  err <- 1
 
   upd <- c()
 
