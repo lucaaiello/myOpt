@@ -15,7 +15,7 @@ install.packages("myOpt")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to solve the problem of parameters estimation in linear models:
 
 ``` r
 library(myOpt)
@@ -40,7 +40,5 @@ par <- rnorm(3)
 # the function returns a vector containing the values of the estimated parameters
 
 est_par <- linear_gd_optim(par, X, Y)
-
-
 ```
 

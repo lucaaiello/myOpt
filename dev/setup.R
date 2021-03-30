@@ -22,7 +22,8 @@ usethis::use_build_ignore("dev")
 usethis::use_description(
   list(
     Title = "My Optimization Package",
-    `Authors@R` = "person('Luca', 'Aiello', email = 'l.aiello4@campus.unimib.it', role = c('cre', 'aut'))",
+    `Authors@R` = c("person('Luca', 'Aiello', email = 'l.aiello4@campus.unimib.it', role = c('cre', 'aut'))",
+                    "person('Fabio', 'Piacenza', email = 'f.piacenza1@campus.unimib.it', role = c('cre', 'aut'))"),
     Description = "A personalized way to optimize functions in R.",
     URL = "https://github.com/lucaaiello/myOpt"
   )
