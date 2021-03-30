@@ -5,8 +5,8 @@
 #' @param par Initial values.
 #' @param X Data predictiors.
 #' @param Y Response variables.
-#' @param tolerance Value for the stopping criterion. The default value is set to 1e-3.
-#' @param maxit Maximum iterations allowed. The default value is set to 1000.
+#' @param tolerance Value for the stopping criterion. The default value is set to 1e-6.
+#' @param maxit Maximum iterations allowed. The default value is set to 10000.
 #' @param stepsize Length of the stepsize parameter. The default value is set to 1e-3.
 #' @param verbose If set TRUE the function produce messages during the computation.
 #'
@@ -19,12 +19,12 @@ linear_gd_optim <- function(par, X, Y,
                             tolerance=1e-6, maxit=10000, stepsize=1e-3,
                             verbose=T){
 
-  I <- dim(X)[2]
+  I <- dim(X)[2] # numbers of predictors (including the intercept)
 
-  it <- 1
-  err <- 1
+  it <- 1 # iteration index iniziation
+  err <- 1 # error iniziation
 
-  upd <- rep(0,I)
+  upd <- vector(mode = "numeric", length = I)# rep(0,I)
 
   while (err > tolerance & it < maxit) {
 
