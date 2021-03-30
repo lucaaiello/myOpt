@@ -10,16 +10,21 @@
 #' @export
 #'
 
-my_grad <- function(par, X, Y, verbose = TRUE){
+my_grad <- function(par, X, Y, verbose = T){
 
-  N <- length(Y)
-  I <- dim(X)[2]
-  grad <- rep(0,I)
+  N <- length(Y)       # number of observations
+  I <- dim(X)[2]       # number of predictors
 
-  for (i in 1:I) {
-    for (n in 1:N) {
-      grad[i] <- grad[i] + 2/N * (Y[n] - X[n,]%*%par) * (-X[n,i])
-    }
+  grad <- rep(0,I)     # initialization of gradient vector
+
+  for (i in 1:I) {     # computation of the gradient component for component
+
+    grad[i] <- 2/N * (X%*%par - Y) %*% X[,i]
+    # for (n in 1:N) {
+    #
+    #   grad[i] <- grad[i] + 2/N * (X[n,]%*%par - Y[n]) * X[n,i]
+    #
+    # }
   }
 
   return(grad)

@@ -14,35 +14,34 @@
 #' @export
 #'
 
-
 linear_gd_optim <- function(par, X, Y,
                             tolerance=1e-6, maxit=10000, stepsize=1e-3,
                             verbose=T){
 
   I <- dim(X)[2] # numbers of predictors (including the intercept)
 
-  it <- 1 # iteration index iniziation
+  it <- 1  # iteration index iniziation
   err <- 1 # error iniziation
 
-  upd <- vector(mode = "numeric", length = I)# rep(0,I)
+  par_new <- vector(mode = "numeric", length = I) # vector for the update in the cicle
 
   while (err > tolerance & it < maxit) {
 
-    grad <- my_grad(par, X, Y)
+    grad <- my_grad(par, X, Y) # gradient computation with the current values of the parameters
 
     for (i in 1:I) {
 
-      upd[i] <- par[i] - stepsize * grad[i]
+      par_new[i] <- par[i] - stepsize * grad[i] # update of the parameters
 
     }
 
-    err <- max(abs(upd - par))
-    it <- it + 1
+    err <- max(abs(par_new - par)) # computation of the error
+    it <- it + 1                   # updating the iteration index
 
-    par <- upd
+    par <- par_new # assigning the new value to the old one as to begin a possible new iteration
 
   }
 
-  return(upd)
+  return(par_new)
 
 }
