@@ -1,6 +1,6 @@
 #' linear_gd_optim
 #'
-#' This function provides a personalized efficient way for optimizing functions
+#' This function provides a personalized way for optimizing functions
 #'
 #' @param par Initial values.
 #' @param X Data predictiors.
@@ -14,9 +14,9 @@
 #' @export
 #'
 
-linear_gd_optim <- function(par, X, Y,
-                            tolerance=1e-6, maxit=10000, stepsize=1e-3,
-                            verbose=T){
+linear_gd_optim_old <- function(par, X, Y,
+                                tolerance=1e-6, maxit=10000, stepsize=1e-3,
+                                verbose=T){
 
   I <- dim(X)[2] # numbers of predictors (including the intercept)
 
@@ -29,7 +29,11 @@ linear_gd_optim <- function(par, X, Y,
 
     grad <- my_grad(par, X, Y) # gradient computation with the current values of the parameters
 
-    par_new <- par - stepsize * grad # update of the parameters
+    for (i in 1:I) {
+
+      par_new[i] <- par[i] - stepsize * grad[i] # update of the parameters
+
+    }
 
     err <- max(abs(par_new - par)) # computation of the error
     it <- it + 1                   # updating the iteration index

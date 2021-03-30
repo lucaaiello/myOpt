@@ -1,6 +1,6 @@
 #' Gradient computation
 #'
-#' This function provides a vectorized version of the gradient computation
+#' This function provides a basic way to compute gradient
 #'
 #' @param par Parameters values.
 #' @param X Data predictiors.
@@ -10,7 +10,7 @@
 #' @export
 #'
 
-my_grad <- function(par, X, Y, verbose = T){
+my_grad_old <- function(par, X, Y, verbose = T){
 
   N <- length(Y)       # number of observations
   I <- dim(X)[2]       # number of predictors
@@ -19,12 +19,12 @@ my_grad <- function(par, X, Y, verbose = T){
 
   for (i in 1:I) {     # computation of the gradient component for component
 
-    grad[i] <- 2/N * t(X%*%par - Y) %*% X[,i]
-    # for (n in 1:N) {
-    #
-    #   grad[i] <- grad[i] + 2/N * (X[n,]%*%par - Y[n]) * X[n,i]
-    #
-    # }
+    for (n in 1:N) {
+
+      grad[i] <- grad[i] + 2/N * (X[n,]%*%par - Y[n]) * X[n,i]
+
+    }
+
   }
 
   return(grad)
