@@ -84,7 +84,7 @@ usethis::use_test( "linear_gd_optim" )
 
 
 ## Vignette
-usethis::use_vignette("ThisTidyPackage")
+usethis::use_vignette("myOpt_usage")
 devtools::build_vignettes()
 # Install the package and see it with `vignette("ThisTidyPackage")`
 # List your vignettes: vignette(package = 'cancRFDS')

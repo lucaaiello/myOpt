@@ -1,0 +1,105 @@
+---
+title: "myOpt packacge usage"
+author: "Aiello Luca, Piacenza Fabio"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{myOpt_usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+The goal of myOpt package is to provide users an efficient way to estimate parameters of a linear model through optimization techniques. In the following line there aree compared the results using the functions of this package and the standard one.
+
+```{r setup}
+library(myOpt)
+
+## basic example code
+
+set.seed(8675309)
+
+# data simulation for example purposes
+
+n = 1000
+
+x1 = rnorm(n)
+x2 = rnorm(n)
+X <- cbind(rep(1,n),x1,x2) # predictor matrix
+
+Y = 5.6 + 2.3*x1 + 8.7*x2 + rnorm(n) # response vector
+
+# random initial values for the parameters of the linear model
+
+par <- rnorm(3)
+
+# the function returns a vector containing the values of the estimated parameters
+
+opt_par <- linear_gd_optim(par, X, Y)
+names(opt_par) <- c('(Intercept)', 'x1', 'x2')
+
+# standard lm function for estimating the parameters
+
+lm_par <- lm(Y ~ x1 + x2)$coefficients
+
+opt_par
+
+lm_par
+
+## Timing comparison between functions
+
+library(tictoc)
+
+tic()
+linear_gd_optim(par, X, Y)
+toc()
+
+tic()
+linear_gd_optim_old(par, X, Y)
+toc()
+
+tic()
+lm(Y ~ x1 + x2)
+toc()
+```
+
+As it is possible to notice the results are quite the same, meaning that the accuracy of the method implemented is, in terms of results, comparable to the standard one. The vectorized version of the optimization function is much faster the the one using for loops, and the standard function is the fastest one. Now let's benchmark the functions of this package versus the standard one
+
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+## Useful functions
+
+# Plot a benchmark
+show_bm <- function(bm) {
+  print(print_bench(bm))
+  autoplot(bm)
+}
+
+# printable bench (for RMarkdown)
+print_bench <- function(bm) {
+  bm %>% 
+    mutate(expression = as.character(expression))
+}
+
+
+## Benchmarks 
+
+bench::mark(
+  vec_method = linear_gd_optim(par, X, Y),
+  for_method = linear_gd_optim_old(par, X, Y),
+  filter_gc = FALSE,
+) %>%
+  show_bm()
+```
+
+
