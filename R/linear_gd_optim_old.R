@@ -1,4 +1,4 @@
-#' linear_gd_optim
+#' linear_gd_optim_old
 #'
 #' This function provides a personalized way for optimizing functions
 #'
