@@ -27,7 +27,7 @@ linear_gd_optim_old <- function(par, X, Y,
 
   while (err > tolerance & it < maxit) {
 
-    grad <- my_grad(par, X, Y) # gradient computation with the current values of the parameters
+    grad <- my_grad_old(par, X, Y) # gradient computation with the current values of the parameters
 
     for (i in 1:I) {
 
