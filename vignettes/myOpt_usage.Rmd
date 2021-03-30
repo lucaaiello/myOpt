@@ -1,5 +1,5 @@
 ---
-title: "myOpt packacge usage"
+title: "myOpt_packacge_usage"
 author: "Aiello Luca, Piacenza Fabio"
 output: rmarkdown::html_vignette
 vignette: >
