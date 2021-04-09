@@ -61,9 +61,11 @@ linear_gd_optim <- function(par, X, Y,
 
     par <- par_new # assigning the new value to the old one as to begin a possible new iteration
 
+
   }
 
   names(par_new) <- c('(Intercept)', paste('x',1:(dim(X)[2]-1),sep=""))
+
   return(par_new)
 
 }

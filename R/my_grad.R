@@ -8,7 +8,7 @@
 #'
 #' @return Vector containing the gradient scores.
 #'
-#' @examples
+#' @example
 #'
 #' # Having the parameters vector "par", the predictors matrix "X",
 #' # and the outcome vector "Y", the standard usage for computing the
@@ -26,17 +26,13 @@ my_grad <- function(par, X, Y, verbose = T){
 
   grad <- rep(0,I)     # initialization of gradient vector
 
-  grad <- 2/N * t(X%*%par - Y) %*% X
+  grad <- 2/N * t(X) %*% (X%*%par - Y)
 
-#  for (i in 1:I) {     # computation of the gradient component for component
-
-    #grad[i] <- 2/N * t(X%*%par - Y) %*% X[,i]
-    # for (n in 1:N) {
-    #
-    #   grad[i] <- grad[i] + 2/N * (X[n,]%*%par - Y[n]) * X[n,i]
-    #
-    # }
-#  }
+  # for (i in 1:I) {     # computation of the gradient component for component
+  #
+  #   grad[i] <- 2/N * t(X%*%par - Y) %*% X[,i]
+  #
+  # }
 
   return(grad)
 
