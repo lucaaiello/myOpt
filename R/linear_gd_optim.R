@@ -11,6 +11,31 @@
 #' @param verbose If set TRUE the function produce messages during the computation.
 #'
 #' @return Vector containing the estimated parameters.
+#'
+#' @examples
+#' library(myOpt)
+#' ## basic example code
+#'
+#' set.seed(8675309)
+#'
+#' # data simulation for example purposes
+#'
+#' n = 1000
+#'
+#' x1 = rnorm(n)
+#' x2 = rnorm(n)
+#' X <- cbind(rep(1,n),x1,x2)
+#'
+#' Y = 1 + 0.5*x1 + 0.2*x2 + rnorm(n)
+#'
+#' # random initial values for the parameters of the linear model
+#'
+#' par <- rnorm(3)
+#'
+# the function returns a vector containing the values of the estimated parameters
+#'
+#' est_par <- linear_gd_optim(par, X, Y)
+#'
 #' @export
 #'
 
