@@ -7,5 +7,9 @@
 #' @export
 #'
 my_pred_error <- function(Y, Y_pred){
+
   err <- sqrt(sum((Y-Y_pred)^2))
+
+  return(err)
+
 }
