@@ -12,7 +12,7 @@ my_pred_error(Y, Y_pred)
 \item{Y_pred}{Prediction of the response vector.}
 }
 \value{
-Returns the L2 norm of the difference between observations and predictions (i.e. Y - Y_pred).
+Returns the mean squared error of the prediction.
 }
 \description{
 Title

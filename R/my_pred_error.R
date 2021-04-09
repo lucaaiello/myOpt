@@ -3,12 +3,12 @@
 #' @param Y Response vector.
 #' @param Y_pred Prediction of the response vector.
 #'
-#' @return Returns the L2 norm of the difference between observations and predictions (i.e. Y - Y_pred).
+#' @return Returns the mean squared error of the prediction.
 #' @export
 #'
 my_pred_error <- function(Y, Y_pred){
 
-  err <- sqrt(sum((Y-Y_pred)^2))
+  err <- mean((Y-Y_pred)^2)
 
   return(err)
 
