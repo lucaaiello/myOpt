@@ -14,7 +14,7 @@
 #'
 
 linear_sd_optim <- function(par, X, Y,
-                            tolerance=1e-6, maxit=10000,
+                            tolerance=1e-6, maxit=50000,
                             verbose=T){
 
   I <- dim(X)[2] # numbers of predictors (including the intercept)
@@ -31,7 +31,7 @@ linear_sd_optim <- function(par, X, Y,
 
     hess <- my_hess(X) # Hessian computation with the current values of the parameters
 
-    stepsize <- sqrt(sum(grad^2)) / (t(grad) %*% hess %*% grad)   # update of the step
+    stepsize <- as.numeric(sum(grad^2) / (t(grad) %*% hess %*% grad))   # update of the step
 
     par_new <- par - stepsize * grad # update of the parameters
 
@@ -39,9 +39,10 @@ linear_sd_optim <- function(par, X, Y,
     it <- it + 1                   # updating the iteration index
 
     par <- par_new # assigning the new value to the old one as to begin a possible new iteration
-    names(par) <- c('(Intercept)', paste('x',1:(dim(X)[2]-1),sep=""))
 
   }
+
+  names(par_new) <- c('(Intercept)', paste('x',1:(dim(X)[2]-1),sep=""))
 
   return(par_new)
 

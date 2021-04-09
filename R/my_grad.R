@@ -24,16 +24,10 @@ my_grad <- function(par, X, Y, verbose = T){
   N <- length(Y)       # number of observations
   I <- dim(X)[2]       # number of predictors
 
-  grad <- rep(0,I)     # initialization of gradient vector
+  grad <- vector(mode = "numeric", length = I)
 
   grad <- 2/N * t(X) %*% (X%*%par - Y)
 
-  # for (i in 1:I) {     # computation of the gradient component for component
-  #
-  #   grad[i] <- 2/N * t(X%*%par - Y) %*% X[,i]
-  #
-  # }
-
-  return(grad)
+  return(as.numeric(grad))
 
 }
