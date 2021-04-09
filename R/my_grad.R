@@ -8,7 +8,7 @@
 #'
 #' @return Vector containing the gradient scores.
 #'
-#' @example
+#' @examples
 #'
 #' # Having the parameters vector "par", the predictors matrix "X",
 #' # and the outcome vector "Y", the standard usage for computing the
