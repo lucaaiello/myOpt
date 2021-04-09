@@ -12,7 +12,7 @@
 #'
 #' @return Vector containing the estimated parameters.
 #'
-#' @example
+#' @examples
 #' library(myOpt)
 #' ## basic example code
 #'
