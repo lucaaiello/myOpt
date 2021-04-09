@@ -1,4 +1,4 @@
-#' Title
+#' Prediction of a linear model
 #'
 #' @param X Data matrix predictiors.
 #' @param par Parameters vector to be used in the prediction.

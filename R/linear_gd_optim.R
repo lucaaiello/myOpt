@@ -4,7 +4,7 @@
 #'
 #' @param par Initial values.
 #' @param X Data matrix predictiors.
-#' @param Y Response variables.
+#' @param Y Response vector.
 #' @param tolerance Value for the stopping criterion. The default value is set to 1e-6.
 #' @param maxit Maximum iterations allowed. The default value is set to 10000.
 #' @param stepsize Length of the stepsize parameter. The default value is set to 1e-3.

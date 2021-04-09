@@ -3,8 +3,8 @@
 #' This function provides a personalized efficient way for optimizing functions
 #'
 #' @param par Initial values.
-#' @param X Data predictors.
-#' @param Y Response variables.
+#' @param X Data matrix predictors.
+#' @param Y Response vector.
 #' @param tolerance Value for the stopping criterion. The default value is set to 1e-6.
 #' @param maxit Maximum iterations allowed. The default value is set to 10000.
 #' @param verbose If set TRUE the function produce messages during the computation.
