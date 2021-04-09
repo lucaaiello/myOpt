@@ -9,7 +9,7 @@
 #' @examples
 #'
 #'
-my_linear_predict <- function(par, X){
+my_linear_gd_predict <- function(par, X){
 
   return(X%*%par)
 

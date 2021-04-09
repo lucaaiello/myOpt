@@ -8,7 +8,7 @@ test_that("my gradient method works", {
   par <- rnorm(3)
 
   my_result <- linear_gd_optim(par, X, Y)
-  names(my_result) <- c('(Intercept)', 'x1', 'x2')
+
   exp_result <- lm(Y ~ x1 + x2)$coefficients
 
   expect_equal(my_result,
