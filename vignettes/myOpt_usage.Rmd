@@ -69,7 +69,7 @@ lm(Y ~ x1 + x2)
 toc()
 ```
 
-As it is possible to notice the results are quite the same, meaning that the accuracy of the method implemented is, in terms of results, comparable to the standard one. The vectorized version of the optimization function is much faster the the one using for loops, and the standard function is the fastest one. Now let's benchmark the functions of this package versus the standard one
+As it is possible to notice the results are quite the same, meaning that the accuracy of the method implemented is, in terms of results, comparable to the standard one. The vectorized version of the optimization function is much faster the the one using for loops, and the standard function is the fastest one. Now let's benchmark the vectorized version of the the function "linear_gd_optim" versus the one using only for loops.
 
 ```{r}
 
@@ -101,5 +101,7 @@ bench::mark(
 ) %>%
   show_bm()
 ```
+
+From the benchmarks it is possible to see how the vectorized version of the function performs much faster than the other one; this allows our function to compete with the standard one "lm" not only in terms of result accuracy but also in terms of computation times.
 
 

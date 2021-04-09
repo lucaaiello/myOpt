@@ -17,7 +17,7 @@ linear_gd_optim(
 \arguments{
 \item{par}{Initial values.}
 
-\item{X}{Data predictiors.}
+\item{X}{Data matrix predictiors.}
 
 \item{Y}{Response variables.}
 
