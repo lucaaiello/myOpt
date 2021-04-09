@@ -7,6 +7,15 @@
 #' @param Y Response variables.
 #'
 #' @return Vector containing the gradient scores.
+#'
+#' @examples
+#'
+#' # Having the parameters vector "par", the predictors matrix "X",
+#' # and the outcome vector "Y", the standard usage for computing the
+#' # descend gradient direction is the following:
+#'
+#' my_grad(par, X, Y)
+#'
 #' @export
 #'
 
