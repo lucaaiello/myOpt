@@ -4,7 +4,7 @@
 \alias{linear_sd_optim}
 \title{linear_sd_optim}
 \usage{
-linear_sd_optim(par, X, Y, tolerance = 1e-06, maxit = 50000, verbose = T)
+linear_sd_optim(par, X, Y, tolerance = 1e-06, maxit = 15000, verbose = T)
 }
 \arguments{
 \item{par}{Initial values.}
