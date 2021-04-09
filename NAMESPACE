@@ -2,6 +2,8 @@
 
 export(linear_gd_optim)
 export(linear_gd_optim_old)
+export(linear_sd_optim)
 export(my_grad)
 export(my_grad_old)
-export(my_linear_predict)
+export(my_hess)
+export(my_linear_gd_predict)

@@ -26,15 +26,17 @@ my_grad <- function(par, X, Y, verbose = T){
 
   grad <- rep(0,I)     # initialization of gradient vector
 
-  for (i in 1:I) {     # computation of the gradient component for component
+  grad <- 2/N * t(X%*%par - Y) %*% X
 
-    grad[i] <- 2/N * t(X%*%par - Y) %*% X[,i]
+#  for (i in 1:I) {     # computation of the gradient component for component
+
+    #grad[i] <- 2/N * t(X%*%par - Y) %*% X[,i]
     # for (n in 1:N) {
     #
     #   grad[i] <- grad[i] + 2/N * (X[n,]%*%par - Y[n]) * X[n,i]
     #
     # }
-  }
+#  }
 
   return(grad)
 
