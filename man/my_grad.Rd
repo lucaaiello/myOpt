@@ -14,7 +14,7 @@ my_grad(par, X, Y, verbose = T)
 \item{Y}{Response variables.}
 }
 \value{
-Vector containing the gradient scores.
+Returns the vector containing the gradient scores.
 }
 \description{
 This function provides a vectorized version of the gradient computation

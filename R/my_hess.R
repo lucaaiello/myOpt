@@ -4,7 +4,7 @@
 #'
 #' @param X Data predictors.
 #'
-#' @return Vector containing the Hessian scores.
+#' @return Returns the matrix containing the Hessian scores.
 #' @export
 #'
 

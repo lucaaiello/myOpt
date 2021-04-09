@@ -2,7 +2,7 @@
 % Please edit documentation in R/my_linear_gd_predict.R
 \name{my_linear_gd_predict}
 \alias{my_linear_gd_predict}
-\title{Title}
+\title{Prediction of a linear model}
 \usage{
 my_linear_gd_predict(par, X)
 }
@@ -12,10 +12,10 @@ my_linear_gd_predict(par, X)
 \item{X}{Data matrix predictiors.}
 }
 \value{
-Vector containing the predictions computed for the data contained in X
+Returns the vector containing the predictions computed for the data contained in X
 }
 \description{
-Title
+Prediction of a linear model
 }
 \examples{
 

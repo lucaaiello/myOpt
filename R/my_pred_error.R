@@ -3,7 +3,7 @@
 #' @param Y Response vector.
 #' @param Y_pred Prediction of the response vector.
 #'
-#' @return the L2 norm of the difference between observations and predictions.
+#' @return Returns the L2 norm of the difference between observations and predictions (i.e. Y - Y_pred).
 #' @export
 #'
 my_pred_error <- function(Y, Y_pred){

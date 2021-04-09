@@ -6,7 +6,7 @@
 #' @param X Data predictiors.
 #' @param Y Response variables.
 #'
-#' @return Vector containing the gradient scores.
+#' @return Returns the vector containing the gradient scores.
 #'
 #' @examples
 #'

@@ -4,14 +4,14 @@
 \alias{linear_sd_optim}
 \title{linear_sd_optim}
 \usage{
-linear_sd_optim(par, X, Y, tolerance = 1e-06, maxit = 10000, verbose = T)
+linear_sd_optim(par, X, Y, tolerance = 1e-06, maxit = 50000, verbose = T)
 }
 \arguments{
 \item{par}{Initial values.}
 
-\item{X}{Data predictors.}
+\item{X}{Data matrix predictors.}
 
-\item{Y}{Response variables.}
+\item{Y}{Response vector.}
 
 \item{tolerance}{Value for the stopping criterion. The default value is set to 1e-6.}
 
@@ -20,7 +20,7 @@ linear_sd_optim(par, X, Y, tolerance = 1e-06, maxit = 10000, verbose = T)
 \item{verbose}{If set TRUE the function produce messages during the computation.}
 }
 \value{
-Vector containing the estimated parameters.
+Returns the vector containing the estimated parameters.
 }
 \description{
 This function provides a personalized efficient way for optimizing functions

@@ -19,7 +19,7 @@ linear_gd_optim(
 
 \item{X}{Data matrix predictiors.}
 
-\item{Y}{Response variables.}
+\item{Y}{Response vector.}
 
 \item{tolerance}{Value for the stopping criterion. The default value is set to 1e-6.}
 
@@ -30,7 +30,7 @@ linear_gd_optim(
 \item{verbose}{If set TRUE the function produce messages during the computation.}
 }
 \value{
-Vector containing the estimated parameters.
+Returns the vector containing the estimated parameters.
 }
 \description{
 This function provides a personalized efficient way for optimizing functions

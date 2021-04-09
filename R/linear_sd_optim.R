@@ -9,12 +9,12 @@
 #' @param maxit Maximum iterations allowed. The default value is set to 10000.
 #' @param verbose If set TRUE the function produce messages during the computation.
 #'
-#' @return Vector containing the estimated parameters.
+#' @return Returns the vector containing the estimated parameters.
 #' @export
 #'
 
 linear_sd_optim <- function(par, X, Y,
-                            tolerance=1e-6, maxit=50000,
+                            tolerance=1e-6, maxit=15000,
                             verbose=T){
 
   I <- dim(X)[2] # numbers of predictors (including the intercept)

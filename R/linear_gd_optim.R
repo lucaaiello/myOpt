@@ -10,7 +10,7 @@
 #' @param stepsize Length of the stepsize parameter. The default value is set to 1e-3.
 #' @param verbose If set TRUE the function produce messages during the computation.
 #'
-#' @return Vector containing the estimated parameters.
+#' @return Returns the vector containing the estimated parameters.
 #'
 #' @examples
 #' library(myOpt)

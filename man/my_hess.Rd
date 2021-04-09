@@ -10,7 +10,7 @@ my_hess(X, verbose = T)
 \item{X}{Data predictors.}
 }
 \value{
-Vector containing the Hessian scores.
+Returns the matrix containing the Hessian scores.
 }
 \description{
 This function provides a vectorized version of the Hessian computation
