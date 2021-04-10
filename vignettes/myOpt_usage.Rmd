@@ -1,5 +1,5 @@
 ---
-title: "myOpt_package_usage"
+title: "myOpt package to fit linear models"
 author: "Aiello Luca, Piacenza Fabio"
 output: rmarkdown::html_vignette
 vignette: >
@@ -48,7 +48,6 @@ par <- rnorm(dim(X)[2])
 # the function returns a vector containing the values of the estimated parameters
 
 opt_par <- linear_gd_optim(par, X, Y)
-#names(opt_par) <- c('(Intercept)', 'x1', 'x2')
 
 # standard lm function for estimating the parameters
 
@@ -79,11 +78,12 @@ As it is possible to notice, the results are quite the same, meaning that the ac
 The vectorized version of the optimization function is much faster than the one using for loops, and the standard function is the fastest one. 
 Now let's benchmark the vectorized version of the the function "linear_gd_optim" versus the one using only for loops.
 
-```{r}
+```{r, fig.show="hold", fig.align = "center", fig.width = 7, fig.asp = .62}
 
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(bench)
 
 ## Useful functions
 
@@ -117,7 +117,7 @@ From the benchmarks it is possible to see how the vectorized version of the func
 
 The parameters of the linear model can also be calculated with the steepest descend method, using the function "linear_sd_optim" implemented in this package.
 
-The example of the previous section is repeated applying the steepest descend method, comparing results and comuptation times with the gradient descent method and the standard function "lm".
+The example of the previous section is repeated applying the steepest descend method, comparing results and computation times with the gradient descent method and the standard function "lm".
 
 ```{r setup sd}
 library(myOpt)
@@ -143,7 +143,6 @@ par <- rnorm(dim(X)[2])
 # the function returns a vector containing the values of the estimated parameters
 
 opt_par <- linear_sd_optim(par, X, Y)
-#names(opt_par) <- c('(Intercept)', 'x1', 'x2')
 
 # standard lm function for estimating the parameters
 
@@ -174,11 +173,12 @@ It can be noted that the results are quite similar, meaning that also the accura
 The vectorized version of the gradient descent method is faster than the steepest descent one, while the standard function remains the fastest one. 
 We proceed benchmarking the functions "linear_gd_optim" (based on the gradient descent) and "linear_sd_optim" (based on the steepest descent).
 
-```{r}
+```{r, fig.show="hold", fig.align = "center", fig.width = 7, fig.asp = .62}
 
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(bench)
 
 ## Useful functions
 
@@ -207,14 +207,14 @@ bench::mark(
 ```
 
 From the benchmarks it is again possible to observe that the gradient descent method is faster than the steepest descent one, in front of a comparable accuracy.
-This is essentially due to the additional operations that the steepest descent has to perform at each step of the optimization procedure, compared to the gradient method.
+This is essentially due to the additional operations that the steepest descent has to perform at each iteration of the optimization procedure to calculate the step, compared to the gradient method.
 
 
 ## 4. Gradient and steepest descent methods using more predictors
 
-This section shows that the gradient and steepest descent methods, implementated in this package, work using even more than twopredictors. 
+This section shows that the gradient and steepest descent methods, implemented in this package, work using even more than two predictors. 
 
-A new example, including three predictors, is reported in this section section applying the gradient and the steepest descend methods, comparing results and comuptation times with the standard function "lm".
+A new example, including three predictors, is reported in this section section applying the gradient and the steepest descend methods, comparing results and computation times with the standard function "lm".
 
 ```{r setup three predictors}
 library(myOpt)
@@ -274,7 +274,7 @@ It can be noted that the results are quite similar, meaning that also the accura
 The vectorized version of the gradient descent method is still faster than the steepest descent one, while the standard function remains the fastest one. 
 We proceed benchmarking the functions "linear_gd_optim" (based on the gradient descent) and "linear_sd_optim" (based on the steepest descent) using three predictors.
 
-```{r}
+```{r, fig.show="hold", fig.align = "center", fig.width = 7, fig.asp = .62}
 
 library(ggplot2)
 library(dplyr)
@@ -287,6 +287,12 @@ show_bm <- function(bm) {
   print(print_bench(bm)) 
   autoplot(bm)
 }
+
+show_bm <- function(bm) {
+  print(print_bench(bm)) 
+  autoplot(bm)
+}
+
 
 # printable bench (for RMarkdown)
 print_bench <- function(bm) {
@@ -308,11 +314,15 @@ bench::mark(
 
 The benchmarks confirm that the gradient descent method is faster than the steepest descent one, in front of a comparable accuracy, also using three predictors.
 
+
 ## 5. Prediction
 
 After the estimation of the parameters, for both method it can be applied a prediction function, that predicts the outcome given the estimated parameters vector of the model and a predictors data matrix.
 
 ```{r}
+# prediction with the parameters estimated through the lm function
+prediction_lm <- predict(lm(Y ~ x1 + x2 + x3))
+
 # prediction with the parameters estimated through the gradient descend method
 prediction_gd <- my_linear_predict(opt_par_gd, X)
 
@@ -323,6 +333,9 @@ prediction_sd <- my_linear_predict(opt_par_sd, X)
 After the computation of the predictions this package allows also to compute the error associated with the prediction.
 
 ```{r}
+# prediction error associated to the lm function estimated parameters
+my_pred_error(Y, prediction_lm)
+
 # prediction error associated to the gradient descend estimated parameters
 my_pred_error(Y, prediction_gd)
 
@@ -331,15 +344,18 @@ my_pred_error(Y, prediction_sd)
 
 ```
 
-It is possible to see how the two methods give similar results in terms of prediction and also in terms of prediction error.
-
+It is possible to see how the three methods give similar results in terms of prediction and also in terms of prediction error.
 
 
 ## 6. Conclusions
 
 This document shows how to apply the functions to estimate the linear regression parameters, implemented in this package, based on the gradient descent and steepest descent methods.
+
 Several examples are reported, including comparisons and benchmarks between the two implemented methods, and versus the standard function "lm".
-All the provided results agree on the fact that the implemented methods are comparable, in terms of accuracy, with respect to the standard function, even if less efficient in terms of computation time.
+All the provided results agree on the fact that the implemented methods are comparable, in terms of accuracy, with respect to the standard function. 
+
+In terms of computation time, gradient descent method is faster than the steepest descent one, because of the simpler step calculation at each iteration.
+We can observe that, even if it is a bit slower, the gradient descent method reaches computation times which are comparable to standard function. 
 
 
 
