@@ -8,10 +8,12 @@ my_hess(X, verbose = T)
 }
 \arguments{
 \item{X}{Data predictors.}
+
+\item{verbose}{If set TRUE the function produce messages during the computation.}
 }
 \value{
 Returns the matrix containing the Hessian scores.
 }
 \description{
-This function provides a vectorized version of the Hessian computation
+This function performs the Hessian computation.
 }
