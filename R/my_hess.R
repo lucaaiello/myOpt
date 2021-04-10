@@ -1,8 +1,9 @@
 #' Hessian computation
 #'
-#' This function provides a vectorized version of the Hessian computation
+#' This function performs the Hessian computation.
 #'
 #' @param X Data predictors.
+#' @param verbose If set TRUE the function produce messages during the computation.
 #'
 #' @return Returns the matrix containing the Hessian scores.
 #' @export
