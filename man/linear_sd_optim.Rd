@@ -9,13 +9,13 @@ linear_sd_optim(par, X, Y, tolerance = 1e-06, maxit = 15000, verbose = T)
 \arguments{
 \item{par}{Initial values.}
 
-\item{X}{Data matrix predictors.}
+\item{X}{Data matrix predictors (first column has to contain values 1 to consider the intercept).}
 
 \item{Y}{Response vector.}
 
 \item{tolerance}{Value for the stopping criterion. The default value is set to 1e-6.}
 
-\item{maxit}{Maximum iterations allowed. The default value is set to 10000.}
+\item{maxit}{Maximum iterations allowed. The default value is set to 15000.}
 
 \item{verbose}{If set TRUE the function produce messages during the computation.}
 }
@@ -23,5 +23,29 @@ linear_sd_optim(par, X, Y, tolerance = 1e-06, maxit = 15000, verbose = T)
 Returns the vector containing the estimated parameters.
 }
 \description{
-This function provides a personalized efficient way for optimizing functions
+This function is used to fit linear models, applying the steepest descent method.
+}
+\examples{
+library(myOpt)
+## basic example code
+
+set.seed(8675309)
+
+# data simulation for example purposes
+
+n = 1000
+
+x1 = rnorm(n)
+x2 = rnorm(n)
+X <- cbind(rep(1,n),x1,x2)
+
+Y = 1 + 0.5*x1 + 0.2*x2 + rnorm(n)
+
+# random initial values for the parameters of the linear model
+
+par <- rnorm(dim(X)[2])
+
+
+est_par <- linear_sd_optim(par, X, Y)
+
 }

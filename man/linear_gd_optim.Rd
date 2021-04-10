@@ -17,7 +17,7 @@ linear_gd_optim(
 \arguments{
 \item{par}{Initial values.}
 
-\item{X}{Data matrix predictiors.}
+\item{X}{Data matrix predictors (first column has to contain values 1 to consider the intercept).}
 
 \item{Y}{Response vector.}
 
@@ -33,7 +33,8 @@ linear_gd_optim(
 Returns the vector containing the estimated parameters.
 }
 \description{
-This function provides a personalized efficient way for optimizing functions
+This function provides a personalized efficient way for optimizing functions.
+It is used to fit linear models, applying the gradient descent method.
 }
 \examples{
 library(myOpt)
@@ -53,7 +54,7 @@ Y = 1 + 0.5*x1 + 0.2*x2 + rnorm(n)
 
 # random initial values for the parameters of the linear model
 
-par <- rnorm(3)
+par <- rnorm(dim(X)[2])
 
 
 est_par <- linear_gd_optim(par, X, Y)

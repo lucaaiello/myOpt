@@ -1,9 +1,10 @@
 #' linear_gd_optim
 #'
-#' This function provides a personalized efficient way for optimizing functions
+#' This function provides a personalized efficient way for optimizing functions.
+#' It is used to fit linear models, applying the gradient descent method.
 #'
 #' @param par Initial values.
-#' @param X Data matrix predictiors.
+#' @param X Data matrix predictors (first column has to contain values 1 to consider the intercept).
 #' @param Y Response vector.
 #' @param tolerance Value for the stopping criterion. The default value is set to 1e-6.
 #' @param maxit Maximum iterations allowed. The default value is set to 10000.
@@ -30,7 +31,7 @@
 #'
 #' # random initial values for the parameters of the linear model
 #'
-#' par <- rnorm(3)
+#' par <- rnorm(dim(X)[2])
 #'
 # the function returns a vector containing the values of the estimated parameters
 #'
@@ -45,10 +46,10 @@ linear_gd_optim <- function(par, X, Y,
 
   I <- dim(X)[2] # numbers of predictors (including the intercept)
 
-  it <- 1  # iteration index iniziation
-  err <- 1 # error iniziation
+  it <- 1  # iteration index initialization
+  err <- 1 # error initialization
 
-  par_new <- vector(mode = "numeric", length = I) # vector for the update in the cicle
+  par_new <- vector(mode = "numeric", length = I) # vector for the update in the loop
 
   while (err > tolerance & it < maxit) {
 
