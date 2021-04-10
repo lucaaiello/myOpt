@@ -308,18 +308,16 @@ bench::mark(
 
 The benchmarks confirm that the gradient descent method is faster than the steepest descent one, in front of a comparable accuracy, also using three predictors.
 
-## 6. Prediction
+## 5. Prediction
 
 After the estimation of the parameters, for both method it can be applied a prediction function, that predicts the outcome given the estimated parameters vector of the model and a predictors data matrix.
 
 ```{r}
 # prediction with the parameters estimated through the gradient descend method
-prediction_gd <- my_linear_predict(est_par_gd, X)
-prediction_gd
+prediction_gd <- my_linear_predict(opt_par_gd, X)
 
 # prediction with the parameters estimated through the steepest descend method
-prediction_sd <- my_linear_predict(est_par_sd, X)
-prediction_sd
+prediction_sd <- my_linear_predict(opt_par_sd, X)
 ```
 
 After the computation of the predictions this package allows also to compute the error associated with the prediction.
@@ -337,7 +335,7 @@ It is possible to see how the two methods give similar results in terms of predi
 
 
 
-## 5. Conclusions
+## 6. Conclusions
 
 This document shows how to apply the functions to estimate the linear regression parameters, implemented in this package, based on the gradient descent and steepest descent methods.
 Several examples are reported, including comparisons and benchmarks between the two implemented methods, and versus the standard function "lm".
