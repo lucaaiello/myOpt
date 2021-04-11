@@ -31,11 +31,11 @@
 #'
 #' the function returns the k-fold cross validation error
 #'
-#' err_kfold <- seq_k_fold_cv(par, X, Y, K, method="sd", parallel=TRUE)
+#' err_kfold <- my_k_fold_cv(par, X, Y, K, method="sd", parallel=TRUE)
 #'
 #' @export
 #'
-seq_k_fold_cv <- function(par, X, Y, K, method="gd", parallel=FALSE){
+my_k_fold_cv <- function(par, X, Y, K, method="gd", parallel=FALSE){
 
   dat <- data.frame(cbind(Y,X))
 
