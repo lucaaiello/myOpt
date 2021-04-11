@@ -12,6 +12,8 @@ my_grad_old(par, X, Y, verbose = T)
 \item{X}{Data predictiors.}
 
 \item{Y}{Response variables.}
+
+\item{verbose}{If set TRUE the function produce messages during the computation.}
 }
 \value{
 Vector containing the gradient scores.
