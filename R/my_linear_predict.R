@@ -6,9 +6,6 @@
 #' @return Returns the vector containing the predictions computed for the data contained in X
 #' @export
 #'
-#' @examples
-#'
-#'
 my_linear_predict <- function(par, X){
 
   return(as.numeric(X%*%par))

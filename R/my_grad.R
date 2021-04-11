@@ -5,6 +5,7 @@
 #' @param par Parameters values.
 #' @param X Data predictors.
 #' @param Y Response variables.
+#' @param verbose If set TRUE the function produce messages during the computation.
 #'
 #' @return Returns the vector containing the gradient scores.
 #'

@@ -10,7 +10,8 @@ The goal of myOpt is to provide users an efficient way to estimate parameters of
 You can install the released version of myOpt from [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
-install.packages("myOpt")
+library(devtools)
+install_github("lucaaiello/myOpt")
 ```
 
 ## Example

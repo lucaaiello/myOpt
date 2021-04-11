@@ -35,6 +35,8 @@
 #'
 #' # the function returns the k-fold cross validation error
 #'
+#' library(doSNOW)
+#'
 #' err_kfold <- my_k_fold_cv(par, X, Y, K, method="sd", parallel=TRUE)
 #'
 #' @export
