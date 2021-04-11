@@ -19,7 +19,9 @@ Imports:
     dplyr,
     tidyr,
     bench,
-    ggbeeswarm
+    ggbeeswarm,
+    doSNOW,
+    parallel
 Suggests: 
     knitr,
     rmarkdown,
