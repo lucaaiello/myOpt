@@ -56,26 +56,9 @@ lm_par <- lm(Y ~ x1 + x2)$coefficients
 opt_par
 
 lm_par
-
-## Timing comparison between functions
-
-library(tictoc)
-
-tic()
-linear_gd_optim(par, X, Y)
-toc()
-
-tic()
-linear_gd_optim_old(par, X, Y)
-toc()
-
-tic()
-lm(Y ~ x1 + x2)
-toc()
 ```
 
 As it is possible to notice, the results are quite the same, meaning that the accuracy of the method implemented is, in terms of results, comparable to the standard one. 
-The vectorized version of the optimization function is much faster than the one using for loops, and the standard function is the fastest one. 
 Now let's benchmark the vectorized version of the the function "linear_gd_optim" versus the one using only for loops.
 
 ```{r, fig.show="hold", fig.align = "center", fig.width = 7, fig.asp = .62}
@@ -151,26 +134,9 @@ lm_par <- lm(Y ~ x1 + x2)$coefficients
 opt_par
 
 lm_par
-
-## Timing comparison between functions
-
-library(tictoc)
-
-tic()
-linear_gd_optim(par, X, Y)
-toc()
-
-tic()
-linear_sd_optim(par, X, Y)
-toc()
-
-tic()
-lm(Y ~ x1 + x2)
-toc()
 ```
 
 It can be noted that the results are quite similar, meaning that also the accuracy of the implemented steepest descent is, in terms of results, comparable to the standard function "lm". 
-The vectorized version of the gradient descent method is faster than the steepest descent one, while the standard function remains the fastest one. 
 We proceed benchmarking the functions "linear_gd_optim" (based on the gradient descent) and "linear_sd_optim" (based on the steepest descent).
 
 ```{r, fig.show="hold", fig.align = "center", fig.width = 7, fig.asp = .62}
@@ -206,7 +172,7 @@ bench::mark(
 
 ```
 
-From the benchmarks it is again possible to observe that the gradient descent method is faster than the steepest descent one, in front of a comparable accuracy.
+From the benchmarks it is again possible to observe that the gradient descent method is faster than the steepest descent one, in front of a comparable accuracy. 
 This is essentially due to the additional operations that the steepest descent has to perform at each iteration of the optimization procedure to calculate the step, compared to the gradient method.
 
 
@@ -252,26 +218,9 @@ opt_par_gd
 opt_par_sd
 
 lm_par
-
-## Timing comparison between functions
-
-library(tictoc)
-
-tic()
-linear_gd_optim(par, X, Y)
-toc()
-
-tic()
-linear_sd_optim(par, X, Y)
-toc()
-
-tic()
-lm(Y ~ x1 + x2 + x3)
-toc()
 ```
 
 It can be noted that the results are quite similar, meaning that also the accuracy of the implemented steepest gradient and steepest descent methods are, in terms of results, comparable to the standard function "lm", also using three predictors. 
-The vectorized version of the gradient descent method is still faster than the steepest descent one, while the standard function remains the fastest one. 
 We proceed benchmarking the functions "linear_gd_optim" (based on the gradient descent) and "linear_sd_optim" (based on the steepest descent) using three predictors.
 
 ```{r, fig.show="hold", fig.align = "center", fig.width = 7, fig.asp = .62}
@@ -418,8 +367,6 @@ bench::mark(
   filter_gc = FALSE,
 ) %>%
   show_bm()
-
-
 ```
 
 We note that, increasing the sample size, the parallel computing allows to save time also using the gradient descent method.

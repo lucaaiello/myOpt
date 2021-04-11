@@ -65,5 +65,16 @@ my_pred_error(Y, prediction_gd)
 # prediction error associated to the steepest descend estimated parameters
 my_pred_error(Y, prediction_sd)
 
+# k-fold cross validation 
+
+library(doSNOW) # inside the functions there are parallelized procedures
+
+K <- 5
+set.seed(8675309)
+my_k_fold_cv(par, X, Y, K)
+set.seed(8675309)
+my_k_fold_cv(par, X, Y, K, method = "sd")
+
+
 ```
 
