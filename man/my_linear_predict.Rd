@@ -17,7 +17,3 @@ Returns the vector containing the predictions computed for the data contained in
 \description{
 Prediction of a linear model
 }
-\examples{
-
-
-}
