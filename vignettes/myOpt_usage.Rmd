@@ -288,12 +288,6 @@ show_bm <- function(bm) {
   autoplot(bm)
 }
 
-show_bm <- function(bm) {
-  print(print_bench(bm)) 
-  autoplot(bm)
-}
-
-
 # printable bench (for RMarkdown)
 print_bench <- function(bm) {
   bm %>% 
@@ -347,7 +341,90 @@ my_pred_error(Y, prediction_sd)
 It is possible to see how the three methods give similar results in terms of prediction and also in terms of prediction error.
 
 
-## 6. Conclusions
+## 6. Cross validation
+
+In order to estimate how accurately the predictive model will perform in practice, cross validation techniques can be used.
+In particular, the k-fold cross validation is implemented in the myOpt package to assess the predictions of the gradient and steepest descent methods.
+The function "my_k_fold_cv" can be used on this purpose for both methods, depending on the value of the argument "method" (to be set "gd" for gradient descent, and to "sd" for steepest descent).
+
+```{r}
+library(doSNOW)
+
+K <- 5
+set.seed(8675309)
+my_k_fold_cv(par, X, Y, K)
+set.seed(8675309)
+my_k_fold_cv(par, X, Y, K, method = "sd")
+
+```
+We can observe that the two methods have very similar prediction errors, which are, as expected, a bit higher than the in-sample errors calculated in the previous section.
+
+The function "my_k_fold_cv" can also perform a parallel calculation.
+It is sufficient to set the argument "parallel" equal to TRUE to move from the sequential to the parallel computing, distributing the calculation on all the available cores.
+We can analyze the effect of the parallel computing on the calculation times.
+
+```{r}
+
+## Useful functions
+
+# Print a benchmark
+show_bm <- function(bm) {
+  print(print_bench(bm)) 
+}
+
+# printable bench (for RMarkdown)
+print_bench <- function(bm) {
+  bm %>% 
+    mutate(expression = as.character(expression))
+}
+
+set.seed(8675309)
+bench::mark(
+  sequential_gd = round(my_k_fold_cv(par, X, Y, K),1),
+  parllel_gd = round(my_k_fold_cv(par, X, Y, K, parallel = TRUE),1),
+  filter_gc = FALSE,
+) %>%
+  show_bm()
+
+set.seed(8675309)
+bench::mark(
+  sequential_sd = round(my_k_fold_cv(par, X, Y, K, method = "sd"),1),
+  parallel_sd = round(my_k_fold_cv(par, X, Y, K, method = "sd", parallel = TRUE),1),
+  filter_gc = FALSE,
+) %>%
+  show_bm()
+
+```
+
+We observe that, considering the current example, the parallel computing is convenient for steepest descent method, whereas it increases the computation time for the gradient descent one. 
+For this last case, since also distributing the calculation has a time impact, it can happen that it more than compensate the time saving obtained splitting the procedure on more cores.
+
+In order to fully appreciate the benefit of the parallel computing, we can set a more computational intensive example, increasing the sample size from 1000 to 10000.
+```{r}
+
+set.seed(8675309)
+n <- 10000
+x1 <- rnorm(n)
+x2 <- rnorm(n)
+Y <- 1 + 0.5*x1 + 0.2*x2 + rnorm(n)
+X <- cbind(rep(1,n),x1,x2)
+par <- rnorm(dim(X)[2])
+K <- 5
+
+set.seed(8675309)
+bench::mark(
+  sequential_gd = round(my_k_fold_cv(par, X, Y, K),1),
+  parallel_gd = round(my_k_fold_cv(par, X, Y, K, parallel = TRUE),1),
+  filter_gc = FALSE,
+) %>%
+  show_bm()
+
+
+```
+
+We note that, increasing the sample size, the parallel computing allows to save time also using the gradient descent method.
+
+## 7. Conclusions
 
 This document shows how to apply the functions to estimate the linear regression parameters, implemented in this package, based on the gradient descent and steepest descent methods.
 
@@ -357,7 +434,5 @@ All the provided results agree on the fact that the implemented methods are comp
 In terms of computation time, gradient descent method is faster than the steepest descent one, because of the simpler step calculation at each iteration.
 We can observe that, even if it is a bit slower, the gradient descent method reaches computation times which are comparable to standard function. 
 
-
-
-
+Some examples of k-fold cross validation are reported, showing how to optimize the caclulations using the parallel computing.
 

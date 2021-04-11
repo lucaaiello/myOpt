@@ -21,6 +21,7 @@ Imports:
     bench,
     ggbeeswarm,
     doSNOW,
+    snow,
     parallel
 Suggests: 
     knitr,

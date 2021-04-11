@@ -66,7 +66,7 @@ devtools::document() # to fill NAMESPACE and documentation with ROXYGEN comments
 # or roxygen2::roxygenise() # converts roxygen comments to .Rd files.
 # or [Ctrl + Shift + D] in RStudio
 
-# To creatte the documentations for the created functions: Ctrl + Shift + Alt + r
+# To create the documentations for the created functions: Ctrl + Shift + Alt + r
 
 ## Build or load
 # Load the package [CTRL + SHIFT + L] or install-and-reload [CTRL + SHIFT + B]
@@ -81,6 +81,7 @@ usethis::use_data_raw( name = "my_dataset", open = FALSE )
 # Tests
 ## Add one line by test you want to create
 usethis::use_test( "linear_gd_optim" )
+usethis::use_test( "linear_sd_optim" )
 
 
 ## Vignette

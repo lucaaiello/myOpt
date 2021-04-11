@@ -29,7 +29,11 @@
 #'
 #' par <- rnorm(dim(X)[2])
 #'
-#' the function returns the k-fold cross validation error
+#' # number of folds
+#'
+#' K <- 5
+#'
+#' # the function returns the k-fold cross validation error
 #'
 #' err_kfold <- my_k_fold_cv(par, X, Y, K, method="sd", parallel=TRUE)
 #'
@@ -40,10 +44,10 @@ my_k_fold_cv <- function(par, X, Y, K, method="gd", parallel=FALSE){
   dat <- data.frame(cbind(Y,X))
 
   #random shuffle data
-  dat.shuffled <- dat[sample(nrow(dat)),]
+  dat.shuffled <<- dat[sample(nrow(dat)),]
 
   #create K equally sized folds
-  folds <- cut(seq(1,nrow(dat.shuffled)),breaks=K,labels=FALSE)
+  folds <<- cut(seq(1,nrow(dat.shuffled)),breaks=K,labels=FALSE)
 
   #Creating empty object to hold fit information
   err <- vector(mode = 'numeric',length=K)
@@ -51,7 +55,7 @@ my_k_fold_cv <- function(par, X, Y, K, method="gd", parallel=FALSE){
   #Perform K-fold cross validation
   fold <- function(i){
 
-    #Segement data by fold using the which() function
+    #Segment data by fold using the which() function
     testIndexes <- which(folds==i,arr.ind=TRUE)
     testData <- dat.shuffled[testIndexes, ]
     trainData <- dat.shuffled[-testIndexes, ]
@@ -74,7 +78,7 @@ my_k_fold_cv <- function(par, X, Y, K, method="gd", parallel=FALSE){
 
   if(parallel){
     n_cpus <- parallel::detectCores()
-    cluster <-  makeCluster(n_cpus, type = "SOCK")
+    cluster <-  snow::makeCluster(n_cpus, type = "SOCK")
     clusterExport(cluster, c("folds", "dat.shuffled", "linear_gd_optim",
                              "linear_sd_optim", "par", "my_linear_predict",
                              "my_pred_error"))
