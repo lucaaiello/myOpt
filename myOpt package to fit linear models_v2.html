@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<!-- saved from url=(0099)file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<meta name="generator" content="pandoc">
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Luca Aiello, Fabio Piacenza">
+
+
+<title>myOpt package to fit linear models</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+<script type="text/javascript" src="./myOpt package to fit linear models_v2_files/MathJax.js.download"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+<body><div id="MathJax_Message" style="display: none;"></div>
+
+
+
+
+<h1 class="title toc-ignore">myOpt package to fit linear models</h1>
+<h4 class="author">Luca Aiello, Fabio Piacenza</h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>1. Introduction</h2>
+<p>The goal of myOpt package is to provide users an efficient way to estimate parameters of a linear model through optimization techniques.</p>
+</div>
+<div id="gradient-descent-method" class="section level2">
+<h2>2. Gradient descent method</h2>
+<p>In the following lines, the results and the computation times are compared, using the function of this package for gradient descent method (“linear_gd_optim”) and the standard one (“lm” from the “stats” core package).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(myOpt)</span>
+<span id="cb1-2"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-2" aria-hidden="true"></a></span>
+<span id="cb1-3"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-3" aria-hidden="true"></a><span class="co">## basic example code</span></span>
+<span id="cb1-4"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-4" aria-hidden="true"></a></span>
+<span id="cb1-5"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-5" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb1-6"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-6" aria-hidden="true"></a></span>
+<span id="cb1-7"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-7" aria-hidden="true"></a><span class="co"># data simulation for example purposes</span></span>
+<span id="cb1-8"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-8" aria-hidden="true"></a></span>
+<span id="cb1-9"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-9" aria-hidden="true"></a>n =<span class="st"> </span><span class="dv">1000</span></span>
+<span id="cb1-10"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-10" aria-hidden="true"></a></span>
+<span id="cb1-11"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-11" aria-hidden="true"></a>x1 =<span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb1-12"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-12" aria-hidden="true"></a>x2 =<span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb1-13"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-13" aria-hidden="true"></a>X &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">rep</span>(<span class="dv">1</span>,n),x1,x2) <span class="co"># predictor matrix</span></span>
+<span id="cb1-14"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-14" aria-hidden="true"></a></span>
+<span id="cb1-15"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-15" aria-hidden="true"></a>Y =<span class="st"> </span><span class="fl">5.6</span> <span class="op">+</span><span class="st"> </span><span class="fl">2.3</span><span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span><span class="fl">8.7</span><span class="op">*</span>x2 <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n) <span class="co"># response vector</span></span>
+<span id="cb1-16"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-16" aria-hidden="true"></a></span>
+<span id="cb1-17"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-17" aria-hidden="true"></a><span class="co"># random initial values for the parameters of the linear model</span></span>
+<span id="cb1-18"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-18" aria-hidden="true"></a></span>
+<span id="cb1-19"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-19" aria-hidden="true"></a>par &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">dim</span>(X)[<span class="dv">2</span>])</span>
+<span id="cb1-20"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-20" aria-hidden="true"></a></span>
+<span id="cb1-21"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-21" aria-hidden="true"></a><span class="co"># the function returns a vector containing the values of the estimated parameters</span></span>
+<span id="cb1-22"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-22" aria-hidden="true"></a></span>
+<span id="cb1-23"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-23" aria-hidden="true"></a>opt_par &lt;-<span class="st"> </span><span class="kw">linear_gd_optim</span>(par, X, Y)</span>
+<span id="cb1-24"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-24" aria-hidden="true"></a></span>
+<span id="cb1-25"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-25" aria-hidden="true"></a><span class="co"># standard lm function for estimating the parameters</span></span>
+<span id="cb1-26"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-26" aria-hidden="true"></a></span>
+<span id="cb1-27"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-27" aria-hidden="true"></a>lm_par &lt;-<span class="st"> </span><span class="kw">lm</span>(Y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2)<span class="op">$</span>coefficients</span>
+<span id="cb1-28"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-28" aria-hidden="true"></a></span>
+<span id="cb1-29"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-29" aria-hidden="true"></a>opt_par</span>
+<span id="cb1-30"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-30" aria-hidden="true"></a><span class="co">#&gt; (Intercept)          x1          x2 </span></span>
+<span id="cb1-31"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-31" aria-hidden="true"></a><span class="co">#&gt;    5.584470    2.286759    8.717051</span></span>
+<span id="cb1-32"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-32" aria-hidden="true"></a></span>
+<span id="cb1-33"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-33" aria-hidden="true"></a>lm_par</span>
+<span id="cb1-34"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-34" aria-hidden="true"></a><span class="co">#&gt; (Intercept)          x1          x2 </span></span>
+<span id="cb1-35"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb1-35" aria-hidden="true"></a><span class="co">#&gt;    5.584780    2.286790    8.717517</span></span></code></pre></div>
+<p>As it is possible to notice, the results are quite the same, meaning that the accuracy of the method implemented is, in terms of results, comparable to the standard one.</p>
+<p>Now let’s benchmark the above used vectorized version of the gradient descent method (function “linear_gd_optim”) versus the one using for loops (function “linear_gd_optim_old”).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-1" aria-hidden="true"></a></span>
+<span id="cb2-2"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-2" aria-hidden="true"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb2-3"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-3" aria-hidden="true"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb2-4"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-4" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb2-5"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-5" aria-hidden="true"></a><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span id="cb2-6"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-6" aria-hidden="true"></a><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span id="cb2-7"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-7" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb2-8"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-8" aria-hidden="true"></a><span class="co">#&gt;     filter, lag</span></span>
+<span id="cb2-9"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-9" aria-hidden="true"></a><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span id="cb2-10"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-10" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb2-11"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-11" aria-hidden="true"></a><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span id="cb2-12"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-12" aria-hidden="true"></a><span class="kw">library</span>(tidyr)</span>
+<span id="cb2-13"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-13" aria-hidden="true"></a><span class="kw">library</span>(bench)</span>
+<span id="cb2-14"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-14" aria-hidden="true"></a></span>
+<span id="cb2-15"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-15" aria-hidden="true"></a><span class="co">## Useful functions</span></span>
+<span id="cb2-16"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-16" aria-hidden="true"></a></span>
+<span id="cb2-17"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-17" aria-hidden="true"></a><span class="co"># Plot a benchmark</span></span>
+<span id="cb2-18"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-18" aria-hidden="true"></a>show_bm &lt;-<span class="st"> </span><span class="cf">function</span>(bm) {</span>
+<span id="cb2-19"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-19" aria-hidden="true"></a>  <span class="kw">print</span>(<span class="kw">print_bench</span>(bm))</span>
+<span id="cb2-20"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-20" aria-hidden="true"></a>  <span class="kw">autoplot</span>(bm)</span>
+<span id="cb2-21"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-21" aria-hidden="true"></a>}</span>
+<span id="cb2-22"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-22" aria-hidden="true"></a></span>
+<span id="cb2-23"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-23" aria-hidden="true"></a><span class="co"># printable bench (for RMarkdown)</span></span>
+<span id="cb2-24"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-24" aria-hidden="true"></a>print_bench &lt;-<span class="st"> </span><span class="cf">function</span>(bm) {</span>
+<span id="cb2-25"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-25" aria-hidden="true"></a>  bm <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-26"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-26" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">expression =</span> <span class="kw">as.character</span>(expression))</span>
+<span id="cb2-27"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-27" aria-hidden="true"></a>}</span>
+<span id="cb2-28"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-28" aria-hidden="true"></a></span>
+<span id="cb2-29"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-29" aria-hidden="true"></a></span>
+<span id="cb2-30"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-30" aria-hidden="true"></a><span class="co">## Benchmarks </span></span>
+<span id="cb2-31"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-31" aria-hidden="true"></a></span>
+<span id="cb2-32"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-32" aria-hidden="true"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb2-33"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-33" aria-hidden="true"></a>  <span class="dt">lm_method =</span> <span class="kw">round</span>(<span class="kw">lm</span>(Y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2)<span class="op">$</span>coefficients,<span class="dv">1</span>),</span>
+<span id="cb2-34"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-34" aria-hidden="true"></a>  <span class="dt">vec_method =</span> <span class="kw">round</span>(<span class="kw">linear_gd_optim</span>(par, X, Y),<span class="dv">1</span>),</span>
+<span id="cb2-35"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-35" aria-hidden="true"></a>  <span class="dt">for_method =</span> <span class="kw">round</span>(<span class="kw">linear_gd_optim_old</span>(par, X, Y),<span class="dv">1</span>),</span>
+<span id="cb2-36"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-36" aria-hidden="true"></a>  <span class="dt">filter_gc =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb2-37"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-37" aria-hidden="true"></a>  <span class="dt">min_time =</span> <span class="dv">10</span></span>
+<span id="cb2-38"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-38" aria-hidden="true"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb2-39"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-39" aria-hidden="true"></a><span class="st">  </span><span class="kw">show_bm</span>()</span>
+<span id="cb2-40"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-40" aria-hidden="true"></a><span class="co">#&gt; # A tibble: 3 x 13</span></span>
+<span id="cb2-41"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-41" aria-hidden="true"></a><span class="co">#&gt;   expression     min  median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time</span></span>
+<span id="cb2-42"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-42" aria-hidden="true"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;bch:t&gt; &lt;bch:t&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;bch:tm&gt;</span></span>
+<span id="cb2-43"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-43" aria-hidden="true"></a><span class="co">#&gt; 1 lm_method  872.8us     1ms  852.       220.5KB     12.4  8515   124        10s</span></span>
+<span id="cb2-44"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-44" aria-hidden="true"></a><span class="co">#&gt; 2 vec_method 140.6ms 149.5ms    6.49     142.3MB     20.6    65   206        10s</span></span>
+<span id="cb2-45"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-45" aria-hidden="true"></a><span class="co">#&gt; 3 for_method   49.3s   49.3s    0.0203    55.7KB     24.3     1  1200      49.3s</span></span>
+<span id="cb2-46"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-46" aria-hidden="true"></a><span class="co">#&gt; # ... with 4 more variables: result &lt;list&gt;, memory &lt;list&gt;, time &lt;list&gt;,</span></span>
+<span id="cb2-47"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb2-47" aria-hidden="true"></a><span class="co">#&gt; #   gc &lt;list&gt;</span></span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;"></p>
+<p>From the benchmarks, it is possible to see how the vectorized version of the function performs much faster than the loops-based one; this allows our function to compete with the standard one “lm” not only in terms of result accuracy but also in terms of computation times. In fact, “lm” is still the fastest one (being based on C code internal functions), but “linear_gd_optim” still remains (for this example) within the fractions of a second. On purposes of comparison, these calculations are executed using a processor Intel(R) Xeon(R) CPU E5-2690 v2 @ 3.00GHz (4 logical processors) with RAM 24.0 GB, Windows 7 64-bit Operating System, and R version 4.0.2.</p>
+</div>
+<div id="steepest-descent-method" class="section level2">
+<h2>3. Steepest descent method</h2>
+<p>The parameters of the linear model can also be calculated with the steepest descend method, using the function “linear_sd_optim” implemented in this package.</p>
+<p>The example of the previous section is repeated applying the steepest descend method, comparing results with the gradient descent method and the standard function “lm”.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-1" aria-hidden="true"></a><span class="kw">library</span>(myOpt)</span>
+<span id="cb3-2"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-2" aria-hidden="true"></a></span>
+<span id="cb3-3"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-3" aria-hidden="true"></a><span class="co">## basic example code</span></span>
+<span id="cb3-4"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-4" aria-hidden="true"></a></span>
+<span id="cb3-5"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-5" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb3-6"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-6" aria-hidden="true"></a></span>
+<span id="cb3-7"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-7" aria-hidden="true"></a><span class="co"># data simulation for example purposes</span></span>
+<span id="cb3-8"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-8" aria-hidden="true"></a></span>
+<span id="cb3-9"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-9" aria-hidden="true"></a>n =<span class="st"> </span><span class="dv">1000</span></span>
+<span id="cb3-10"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-10" aria-hidden="true"></a></span>
+<span id="cb3-11"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-11" aria-hidden="true"></a>x1 =<span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb3-12"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-12" aria-hidden="true"></a>x2 =<span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb3-13"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-13" aria-hidden="true"></a>X &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">rep</span>(<span class="dv">1</span>,n),x1,x2) <span class="co"># predictor matrix</span></span>
+<span id="cb3-14"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-14" aria-hidden="true"></a></span>
+<span id="cb3-15"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-15" aria-hidden="true"></a>Y =<span class="st"> </span><span class="fl">5.6</span> <span class="op">+</span><span class="st"> </span><span class="fl">2.3</span><span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span><span class="fl">8.7</span><span class="op">*</span>x2 <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n) <span class="co"># response vector</span></span>
+<span id="cb3-16"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-16" aria-hidden="true"></a></span>
+<span id="cb3-17"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-17" aria-hidden="true"></a><span class="co"># random initial values for the parameters of the linear model</span></span>
+<span id="cb3-18"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-18" aria-hidden="true"></a></span>
+<span id="cb3-19"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-19" aria-hidden="true"></a>par &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">dim</span>(X)[<span class="dv">2</span>])</span>
+<span id="cb3-20"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-20" aria-hidden="true"></a></span>
+<span id="cb3-21"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-21" aria-hidden="true"></a><span class="co"># the function returns a vector containing the values of the estimated parameters</span></span>
+<span id="cb3-22"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-22" aria-hidden="true"></a></span>
+<span id="cb3-23"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-23" aria-hidden="true"></a>opt_par &lt;-<span class="st"> </span><span class="kw">linear_sd_optim</span>(par, X, Y)</span>
+<span id="cb3-24"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-24" aria-hidden="true"></a></span>
+<span id="cb3-25"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-25" aria-hidden="true"></a><span class="co"># standard lm function for estimating the parameters</span></span>
+<span id="cb3-26"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-26" aria-hidden="true"></a></span>
+<span id="cb3-27"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-27" aria-hidden="true"></a>lm_par &lt;-<span class="st"> </span><span class="kw">lm</span>(Y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2)<span class="op">$</span>coefficients</span>
+<span id="cb3-28"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-28" aria-hidden="true"></a></span>
+<span id="cb3-29"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-29" aria-hidden="true"></a>opt_par</span>
+<span id="cb3-30"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-30" aria-hidden="true"></a><span class="co">#&gt; (Intercept)          x1          x2 </span></span>
+<span id="cb3-31"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-31" aria-hidden="true"></a><span class="co">#&gt;    5.581628    2.286336    8.712374</span></span>
+<span id="cb3-32"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-32" aria-hidden="true"></a></span>
+<span id="cb3-33"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-33" aria-hidden="true"></a>lm_par</span>
+<span id="cb3-34"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-34" aria-hidden="true"></a><span class="co">#&gt; (Intercept)          x1          x2 </span></span>
+<span id="cb3-35"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb3-35" aria-hidden="true"></a><span class="co">#&gt;    5.584780    2.286790    8.717517</span></span></code></pre></div>
+<p>It can be noted that the results are quite similar, meaning that also the accuracy of the implemented steepest descent is, in terms of results, comparable to the standard function “lm”.</p>
+<p>We proceed benchmarking the functions “linear_gd_optim” (based on the gradient descent) and “linear_sd_optim” (based on the steepest descent) with “lm” (the standard one).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-1" aria-hidden="true"></a></span>
+<span id="cb4-2"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-2" aria-hidden="true"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb4-3"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-3" aria-hidden="true"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb4-4"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-4" aria-hidden="true"></a><span class="kw">library</span>(tidyr)</span>
+<span id="cb4-5"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-5" aria-hidden="true"></a><span class="kw">library</span>(bench)</span>
+<span id="cb4-6"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-6" aria-hidden="true"></a></span>
+<span id="cb4-7"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-7" aria-hidden="true"></a><span class="co">## Useful functions</span></span>
+<span id="cb4-8"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-8" aria-hidden="true"></a></span>
+<span id="cb4-9"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-9" aria-hidden="true"></a><span class="co"># Plot a benchmark</span></span>
+<span id="cb4-10"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-10" aria-hidden="true"></a>show_bm &lt;-<span class="st"> </span><span class="cf">function</span>(bm) {</span>
+<span id="cb4-11"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-11" aria-hidden="true"></a>  <span class="kw">print</span>(<span class="kw">print_bench</span>(bm)) </span>
+<span id="cb4-12"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-12" aria-hidden="true"></a>  <span class="kw">autoplot</span>(bm)</span>
+<span id="cb4-13"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-13" aria-hidden="true"></a>}</span>
+<span id="cb4-14"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-14" aria-hidden="true"></a></span>
+<span id="cb4-15"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-15" aria-hidden="true"></a><span class="co"># printable bench (for RMarkdown)</span></span>
+<span id="cb4-16"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-16" aria-hidden="true"></a>print_bench &lt;-<span class="st"> </span><span class="cf">function</span>(bm) {</span>
+<span id="cb4-17"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-17" aria-hidden="true"></a>  bm <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-18"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-18" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">expression =</span> <span class="kw">as.character</span>(expression))</span>
+<span id="cb4-19"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-19" aria-hidden="true"></a>}</span>
+<span id="cb4-20"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-20" aria-hidden="true"></a></span>
+<span id="cb4-21"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-21" aria-hidden="true"></a></span>
+<span id="cb4-22"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-22" aria-hidden="true"></a><span class="co">## Benchmarks </span></span>
+<span id="cb4-23"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-23" aria-hidden="true"></a></span>
+<span id="cb4-24"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-24" aria-hidden="true"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb4-25"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-25" aria-hidden="true"></a>  <span class="dt">lm_method =</span> <span class="kw">round</span>(<span class="kw">lm</span>(Y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2)<span class="op">$</span>coefficients,<span class="dv">1</span>),</span>
+<span id="cb4-26"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-26" aria-hidden="true"></a>  <span class="dt">gd_method =</span> <span class="kw">round</span>(<span class="kw">linear_gd_optim</span>(par, X, Y),<span class="dv">1</span>),</span>
+<span id="cb4-27"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-27" aria-hidden="true"></a>  <span class="dt">sd_method =</span> <span class="kw">round</span>(<span class="kw">linear_sd_optim</span>(par, X, Y),<span class="dv">1</span>),</span>
+<span id="cb4-28"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-28" aria-hidden="true"></a>  <span class="dt">filter_gc =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb4-29"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-29" aria-hidden="true"></a>  <span class="dt">min_time =</span> <span class="dv">10</span></span>
+<span id="cb4-30"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-30" aria-hidden="true"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb4-31"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-31" aria-hidden="true"></a><span class="st">  </span><span class="kw">show_bm</span>()</span>
+<span id="cb4-32"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-32" aria-hidden="true"></a><span class="co">#&gt; # A tibble: 3 x 13</span></span>
+<span id="cb4-33"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-33" aria-hidden="true"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc</span></span>
+<span id="cb4-34"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-34" aria-hidden="true"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;</span></span>
+<span id="cb4-35"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-35" aria-hidden="true"></a><span class="co">#&gt; 1 lm_method  883.96us 972.06us   887.        220KB     8.00  8863    80</span></span>
+<span id="cb4-36"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-36" aria-hidden="true"></a><span class="co">#&gt; 2 gd_method  143.22ms 154.03ms     6.20      142MB    22.0     63   224</span></span>
+<span id="cb4-37"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-37" aria-hidden="true"></a><span class="co">#&gt; 3 sd_method     1.03s    1.08s     0.918     803MB    18.5     10   201</span></span>
+<span id="cb4-38"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-38" aria-hidden="true"></a><span class="co">#&gt; # ... with 5 more variables: total_time &lt;bch:tm&gt;, result &lt;list&gt;, memory &lt;list&gt;,</span></span>
+<span id="cb4-39"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb4-39" aria-hidden="true"></a><span class="co">#&gt; #   time &lt;list&gt;, gc &lt;list&gt;</span></span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;"></p>
+<p>From the benchmarks, it is possible to observe that the gradient descent method is faster than the steepest descent one, in front of a comparable accuracy. This is essentially due to the additional operations that the steepest descent method has to perform at each iteration of the optimization procedure to calculate the step, compared to the gradient descent one.</p>
+</div>
+<div id="gradient-and-steepest-descent-methods-using-more-predictors" class="section level2">
+<h2>4. Gradient and steepest descent methods using more predictors</h2>
+<p>This section shows that the steepest gradient and the steepest descent methods, implemented in this package, work using even more than two predictors.</p>
+<p>A new example, including three predictors, is reported in this section section applying the gradient descend and the steepest descend methods, comparing results with the standard function “lm”.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-1" aria-hidden="true"></a><span class="kw">library</span>(myOpt)</span>
+<span id="cb5-2"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-2" aria-hidden="true"></a></span>
+<span id="cb5-3"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-3" aria-hidden="true"></a><span class="co">## basic example code</span></span>
+<span id="cb5-4"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-4" aria-hidden="true"></a></span>
+<span id="cb5-5"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-5" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb5-6"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-6" aria-hidden="true"></a></span>
+<span id="cb5-7"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-7" aria-hidden="true"></a><span class="co"># data simulation for example purposes</span></span>
+<span id="cb5-8"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-8" aria-hidden="true"></a></span>
+<span id="cb5-9"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-9" aria-hidden="true"></a>n =<span class="st"> </span><span class="dv">1000</span></span>
+<span id="cb5-10"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-10" aria-hidden="true"></a></span>
+<span id="cb5-11"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-11" aria-hidden="true"></a>x1 =<span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb5-12"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-12" aria-hidden="true"></a>x2 =<span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb5-13"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-13" aria-hidden="true"></a>x3 =<span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb5-14"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-14" aria-hidden="true"></a>X &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">rep</span>(<span class="dv">1</span>,n),x1,x2,x3) <span class="co"># predictor matrix</span></span>
+<span id="cb5-15"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-15" aria-hidden="true"></a></span>
+<span id="cb5-16"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-16" aria-hidden="true"></a>Y =<span class="st"> </span><span class="fl">5.6</span> <span class="op">+</span><span class="st"> </span><span class="fl">2.3</span><span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span><span class="fl">8.7</span><span class="op">*</span>x2 <span class="op">+</span><span class="st"> </span><span class="fl">7.2</span><span class="op">*</span>x3 <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n) <span class="co"># response vector</span></span>
+<span id="cb5-17"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-17" aria-hidden="true"></a></span>
+<span id="cb5-18"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-18" aria-hidden="true"></a><span class="co"># random initial values for the parameters of the linear model</span></span>
+<span id="cb5-19"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-19" aria-hidden="true"></a></span>
+<span id="cb5-20"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-20" aria-hidden="true"></a>par &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">dim</span>(X)[<span class="dv">2</span>])</span>
+<span id="cb5-21"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-21" aria-hidden="true"></a></span>
+<span id="cb5-22"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-22" aria-hidden="true"></a><span class="co"># the function returns a vector containing the values of the estimated parameters</span></span>
+<span id="cb5-23"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-23" aria-hidden="true"></a></span>
+<span id="cb5-24"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-24" aria-hidden="true"></a>opt_par_gd &lt;-<span class="st"> </span><span class="kw">linear_gd_optim</span>(par, X, Y)</span>
+<span id="cb5-25"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-25" aria-hidden="true"></a>opt_par_sd &lt;-<span class="st"> </span><span class="kw">linear_sd_optim</span>(par, X, Y)</span>
+<span id="cb5-26"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-26" aria-hidden="true"></a></span>
+<span id="cb5-27"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-27" aria-hidden="true"></a><span class="co"># standard lm function for estimating the parameters</span></span>
+<span id="cb5-28"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-28" aria-hidden="true"></a></span>
+<span id="cb5-29"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-29" aria-hidden="true"></a>lm_par &lt;-<span class="st"> </span><span class="kw">lm</span>(Y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x3)<span class="op">$</span>coefficients</span>
+<span id="cb5-30"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-30" aria-hidden="true"></a></span>
+<span id="cb5-31"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-31" aria-hidden="true"></a>opt_par_gd</span>
+<span id="cb5-32"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-32" aria-hidden="true"></a><span class="co">#&gt; (Intercept)          x1          x2          x3 </span></span>
+<span id="cb5-33"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-33" aria-hidden="true"></a><span class="co">#&gt;    5.583167    2.319347    8.654901    7.199944</span></span>
+<span id="cb5-34"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-34" aria-hidden="true"></a></span>
+<span id="cb5-35"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-35" aria-hidden="true"></a>opt_par_sd</span>
+<span id="cb5-36"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-36" aria-hidden="true"></a><span class="co">#&gt; (Intercept)          x1          x2          x3 </span></span>
+<span id="cb5-37"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-37" aria-hidden="true"></a><span class="co">#&gt;    5.578298    2.318367    8.650892    7.196371</span></span>
+<span id="cb5-38"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-38" aria-hidden="true"></a></span>
+<span id="cb5-39"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-39" aria-hidden="true"></a>lm_par</span>
+<span id="cb5-40"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-40" aria-hidden="true"></a><span class="co">#&gt; (Intercept)          x1          x2          x3 </span></span>
+<span id="cb5-41"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb5-41" aria-hidden="true"></a><span class="co">#&gt;    5.583666    2.319455    8.655211    7.200265</span></span></code></pre></div>
+<p>It can be noted that the results are quite similar, meaning that the accuracy of the implemented steepest gradient and steepest descent methods is, in terms of results, comparable to the standard function “lm”, also using three predictors.</p>
+<p>We proceed benchmarking the functions “linear_gd_optim” (based on the gradient descent) and “linear_sd_optim” (based on the steepest descent) with “lm” (the standard one) using three predictors.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-1" aria-hidden="true"></a></span>
+<span id="cb6-2"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-2" aria-hidden="true"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb6-3"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-3" aria-hidden="true"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb6-4"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-4" aria-hidden="true"></a><span class="kw">library</span>(tidyr)</span>
+<span id="cb6-5"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-5" aria-hidden="true"></a></span>
+<span id="cb6-6"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-6" aria-hidden="true"></a><span class="co">## Useful functions</span></span>
+<span id="cb6-7"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-7" aria-hidden="true"></a></span>
+<span id="cb6-8"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-8" aria-hidden="true"></a><span class="co"># Plot a benchmark</span></span>
+<span id="cb6-9"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-9" aria-hidden="true"></a>show_bm &lt;-<span class="st"> </span><span class="cf">function</span>(bm) {</span>
+<span id="cb6-10"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-10" aria-hidden="true"></a>  <span class="kw">print</span>(<span class="kw">print_bench</span>(bm)) </span>
+<span id="cb6-11"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-11" aria-hidden="true"></a>  <span class="kw">autoplot</span>(bm)</span>
+<span id="cb6-12"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-12" aria-hidden="true"></a>}</span>
+<span id="cb6-13"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-13" aria-hidden="true"></a></span>
+<span id="cb6-14"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-14" aria-hidden="true"></a><span class="co"># printable bench (for RMarkdown)</span></span>
+<span id="cb6-15"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-15" aria-hidden="true"></a>print_bench &lt;-<span class="st"> </span><span class="cf">function</span>(bm) {</span>
+<span id="cb6-16"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-16" aria-hidden="true"></a>  bm <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-17"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-17" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">expression =</span> <span class="kw">as.character</span>(expression))</span>
+<span id="cb6-18"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-18" aria-hidden="true"></a>}</span>
+<span id="cb6-19"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-19" aria-hidden="true"></a></span>
+<span id="cb6-20"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-20" aria-hidden="true"></a></span>
+<span id="cb6-21"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-21" aria-hidden="true"></a><span class="co">## Benchmarks </span></span>
+<span id="cb6-22"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-22" aria-hidden="true"></a></span>
+<span id="cb6-23"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-23" aria-hidden="true"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb6-24"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-24" aria-hidden="true"></a>  <span class="dt">lm_method =</span> <span class="kw">round</span>(<span class="kw">lm</span>(Y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x3)<span class="op">$</span>coefficients,<span class="dv">1</span>),</span>
+<span id="cb6-25"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-25" aria-hidden="true"></a>  <span class="dt">gd_method =</span> <span class="kw">round</span>(<span class="kw">linear_gd_optim</span>(par, X, Y),<span class="dv">1</span>),</span>
+<span id="cb6-26"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-26" aria-hidden="true"></a>  <span class="dt">sd_method =</span> <span class="kw">round</span>(<span class="kw">linear_sd_optim</span>(par, X, Y),<span class="dv">1</span>),</span>
+<span id="cb6-27"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-27" aria-hidden="true"></a>  <span class="dt">filter_gc =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb6-28"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-28" aria-hidden="true"></a>  <span class="dt">min_time =</span> <span class="dv">10</span></span>
+<span id="cb6-29"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-29" aria-hidden="true"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb6-30"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-30" aria-hidden="true"></a><span class="st">  </span><span class="kw">show_bm</span>()</span>
+<span id="cb6-31"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-31" aria-hidden="true"></a><span class="co">#&gt; # A tibble: 3 x 13</span></span>
+<span id="cb6-32"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-32" aria-hidden="true"></a><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc</span></span>
+<span id="cb6-33"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-33" aria-hidden="true"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;</span></span>
+<span id="cb6-34"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-34" aria-hidden="true"></a><span class="co">#&gt; 1 lm_method    1.01ms    1.1ms   777.     267.65KB     7.20  7770    72</span></span>
+<span id="cb6-35"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-35" aria-hidden="true"></a><span class="co">#&gt; 2 gd_method  168.75ms 182.01ms     5.21   180.91MB    19.4     53   198</span></span>
+<span id="cb6-36"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-36" aria-hidden="true"></a><span class="co">#&gt; 3 sd_method     1.33s    1.38s     0.722    1.01GB    14.8      8   164</span></span>
+<span id="cb6-37"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-37" aria-hidden="true"></a><span class="co">#&gt; # ... with 5 more variables: total_time &lt;bch:tm&gt;, result &lt;list&gt;, memory &lt;list&gt;,</span></span>
+<span id="cb6-38"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb6-38" aria-hidden="true"></a><span class="co">#&gt; #   time &lt;list&gt;, gc &lt;list&gt;</span></span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;"></p>
+<p>The benchmarks confirm that the gradient descent method is faster than the steepest descent one, in front of a comparable accuracy, also using three predictors, and that “lm” remains the fastest one.</p>
+</div>
+<div id="prediction" class="section level2">
+<h2>5. Prediction</h2>
+<p>After the estimation of the parameters, for both method it can be applied a prediction function, that predicts the outcome given the estimated parameters vector of the model and a predictors data matrix.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb7-1" aria-hidden="true"></a><span class="co"># prediction with the parameters estimated through the lm function</span></span>
+<span id="cb7-2"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb7-2" aria-hidden="true"></a>prediction_lm &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(Y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x3))</span>
+<span id="cb7-3"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb7-3" aria-hidden="true"></a></span>
+<span id="cb7-4"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb7-4" aria-hidden="true"></a><span class="co"># prediction with the parameters estimated through the gradient descend method</span></span>
+<span id="cb7-5"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb7-5" aria-hidden="true"></a>prediction_gd &lt;-<span class="st"> </span><span class="kw">my_linear_predict</span>(opt_par_gd, X)</span>
+<span id="cb7-6"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb7-6" aria-hidden="true"></a></span>
+<span id="cb7-7"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb7-7" aria-hidden="true"></a><span class="co"># prediction with the parameters estimated through the steepest descend method</span></span>
+<span id="cb7-8"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb7-8" aria-hidden="true"></a>prediction_sd &lt;-<span class="st"> </span><span class="kw">my_linear_predict</span>(opt_par_sd, X)</span></code></pre></div>
+<p>After the computation of the predictions this package allows also to compute the error associated with the prediction.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb8-1" aria-hidden="true"></a><span class="co"># prediction error associated to the lm function estimated parameters</span></span>
+<span id="cb8-2"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb8-2" aria-hidden="true"></a><span class="kw">my_pred_error</span>(Y, prediction_lm)</span>
+<span id="cb8-3"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb8-3" aria-hidden="true"></a><span class="co">#&gt; [1] 0.9872884</span></span>
+<span id="cb8-4"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb8-4" aria-hidden="true"></a></span>
+<span id="cb8-5"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb8-5" aria-hidden="true"></a><span class="co"># prediction error associated to the gradient descend estimated parameters</span></span>
+<span id="cb8-6"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb8-6" aria-hidden="true"></a><span class="kw">my_pred_error</span>(Y, prediction_gd)</span>
+<span id="cb8-7"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb8-7" aria-hidden="true"></a><span class="co">#&gt; [1] 0.9872888</span></span>
+<span id="cb8-8"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb8-8" aria-hidden="true"></a></span>
+<span id="cb8-9"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb8-9" aria-hidden="true"></a><span class="co"># prediction error associated to the steepest descend estimated parameters</span></span>
+<span id="cb8-10"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb8-10" aria-hidden="true"></a><span class="kw">my_pred_error</span>(Y, prediction_sd)</span>
+<span id="cb8-11"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb8-11" aria-hidden="true"></a><span class="co">#&gt; [1] 0.987355</span></span></code></pre></div>
+<p>It is possible to see how the three methods give similar results in terms of prediction and also in terms of prediction error.</p>
+</div>
+<div id="cross-validation" class="section level2">
+<h2>6. Cross validation</h2>
+<p>In order to estimate how accurately the predictive model will perform in practice, cross validation techniques can be used. In particular, the k-fold cross validation is implemented in the myOpt package to assess the predictions of the gradient and steepest descent methods. The function “my_k_fold_cv” can be used on this purpose for both methods, depending on the value of the argument “method” (to be set to “gd” for gradient descent, and to “sd” for steepest descent).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-1" aria-hidden="true"></a><span class="kw">library</span>(doSNOW)</span>
+<span id="cb9-2"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-2" aria-hidden="true"></a><span class="co">#&gt; Warning: package 'doSNOW' was built under R version 4.0.4</span></span>
+<span id="cb9-3"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-3" aria-hidden="true"></a><span class="co">#&gt; Loading required package: foreach</span></span>
+<span id="cb9-4"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-4" aria-hidden="true"></a><span class="co">#&gt; Loading required package: iterators</span></span>
+<span id="cb9-5"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-5" aria-hidden="true"></a><span class="co">#&gt; Loading required package: snow</span></span>
+<span id="cb9-6"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-6" aria-hidden="true"></a><span class="co">#&gt; Warning: package 'snow' was built under R version 4.0.4</span></span>
+<span id="cb9-7"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-7" aria-hidden="true"></a></span>
+<span id="cb9-8"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-8" aria-hidden="true"></a>K &lt;-<span class="st"> </span><span class="dv">5</span></span>
+<span id="cb9-9"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-9" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb9-10"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-10" aria-hidden="true"></a><span class="kw">my_k_fold_cv</span>(par, X, Y, K)</span>
+<span id="cb9-11"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-11" aria-hidden="true"></a><span class="co">#&gt; [1] 0.9992729</span></span>
+<span id="cb9-12"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-12" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb9-13"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-13" aria-hidden="true"></a><span class="kw">my_k_fold_cv</span>(par, X, Y, K, <span class="dt">method =</span> <span class="st">"sd"</span>)</span>
+<span id="cb9-14"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb9-14" aria-hidden="true"></a><span class="co">#&gt; [1] 0.9992957</span></span></code></pre></div>
+<p>We can observe that the two methods have very similar prediction errors, which are, as expected, a bit higher than the in-sample errors calculated in the previous section.</p>
+<p>The function “my_k_fold_cv” can also perform a parallel calculation. It is sufficient to set the argument “parallel” equal to TRUE to move from the sequential to the parallel computing, distributing the calculation on all the available cores (which are 4 in this example). The impact of the parallel computing on the calculation times is analyzed below.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-1" aria-hidden="true"></a></span>
+<span id="cb10-2"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-2" aria-hidden="true"></a><span class="co">## Useful functions</span></span>
+<span id="cb10-3"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-3" aria-hidden="true"></a></span>
+<span id="cb10-4"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-4" aria-hidden="true"></a><span class="co"># Plot a benchmark</span></span>
+<span id="cb10-5"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-5" aria-hidden="true"></a>show_bm &lt;-<span class="st"> </span><span class="cf">function</span>(bm) {</span>
+<span id="cb10-6"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-6" aria-hidden="true"></a>  <span class="kw">print</span>(<span class="kw">print_bench</span>(bm))</span>
+<span id="cb10-7"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-7" aria-hidden="true"></a>  <span class="kw">autoplot</span>(bm)</span>
+<span id="cb10-8"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-8" aria-hidden="true"></a>}</span>
+<span id="cb10-9"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-9" aria-hidden="true"></a></span>
+<span id="cb10-10"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-10" aria-hidden="true"></a><span class="co"># printable bench (for RMarkdown)</span></span>
+<span id="cb10-11"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-11" aria-hidden="true"></a>print_bench &lt;-<span class="st"> </span><span class="cf">function</span>(bm) {</span>
+<span id="cb10-12"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-12" aria-hidden="true"></a>  bm <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-13"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-13" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">expression =</span> <span class="kw">as.character</span>(expression))</span>
+<span id="cb10-14"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-14" aria-hidden="true"></a>}</span>
+<span id="cb10-15"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-15" aria-hidden="true"></a></span>
+<span id="cb10-16"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-16" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb10-17"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-17" aria-hidden="true"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb10-18"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-18" aria-hidden="true"></a>  <span class="dt">sequential_gd =</span> <span class="kw">round</span>(<span class="kw">my_k_fold_cv</span>(par, X, Y, K),<span class="dv">1</span>),</span>
+<span id="cb10-19"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-19" aria-hidden="true"></a>  <span class="dt">parllel_gd =</span> <span class="kw">round</span>(<span class="kw">my_k_fold_cv</span>(par, X, Y, K, <span class="dt">parallel =</span> <span class="ot">TRUE</span>),<span class="dv">1</span>),</span>
+<span id="cb10-20"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-20" aria-hidden="true"></a>  <span class="dt">filter_gc =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb10-21"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-21" aria-hidden="true"></a>  <span class="dt">min_time =</span> <span class="dv">10</span></span>
+<span id="cb10-22"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-22" aria-hidden="true"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb10-23"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">show_bm</span>()</span>
+<span id="cb10-24"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-24" aria-hidden="true"></a><span class="co">#&gt; # A tibble: 2 x 13</span></span>
+<span id="cb10-25"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-25" aria-hidden="true"></a><span class="co">#&gt;   expression         min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc</span></span>
+<span id="cb10-26"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-26" aria-hidden="true"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;</span></span>
+<span id="cb10-27"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-27" aria-hidden="true"></a><span class="co">#&gt; 1 sequential_gd 781.16ms  837.4ms     1.16   725.39MB  17.1       12   176</span></span>
+<span id="cb10-28"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-28" aria-hidden="true"></a><span class="co">#&gt; 2 parllel_gd       1.68s     1.7s     0.589    3.29MB   0.0982     6     1</span></span>
+<span id="cb10-29"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-29" aria-hidden="true"></a><span class="co">#&gt; # ... with 5 more variables: total_time &lt;bch:tm&gt;, result &lt;list&gt;, memory &lt;list&gt;,</span></span>
+<span id="cb10-30"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-30" aria-hidden="true"></a><span class="co">#&gt; #   time &lt;list&gt;, gc &lt;list&gt;</span></span>
+<span id="cb10-31"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-31" aria-hidden="true"></a></span>
+<span id="cb10-32"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-32" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb10-33"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-33" aria-hidden="true"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb10-34"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-34" aria-hidden="true"></a>  <span class="dt">sequential_sd =</span> <span class="kw">round</span>(<span class="kw">my_k_fold_cv</span>(par, X, Y, K, <span class="dt">method =</span> <span class="st">"sd"</span>),<span class="dv">1</span>),</span>
+<span id="cb10-35"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-35" aria-hidden="true"></a>  <span class="dt">parallel_sd =</span> <span class="kw">round</span>(<span class="kw">my_k_fold_cv</span>(par, X, Y, K, <span class="dt">method =</span> <span class="st">"sd"</span>, <span class="dt">parallel =</span> <span class="ot">TRUE</span>),<span class="dv">1</span>),</span>
+<span id="cb10-36"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-36" aria-hidden="true"></a>  <span class="dt">filter_gc =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb10-37"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-37" aria-hidden="true"></a>  <span class="dt">min_time =</span> <span class="dv">10</span></span>
+<span id="cb10-38"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-38" aria-hidden="true"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb10-39"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-39" aria-hidden="true"></a><span class="st">  </span><span class="kw">show_bm</span>()</span>
+<span id="cb10-40"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-40" aria-hidden="true"></a><span class="co">#&gt; # A tibble: 2 x 13</span></span>
+<span id="cb10-41"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-41" aria-hidden="true"></a><span class="co">#&gt;   expression      min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time</span></span>
+<span id="cb10-42"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-42" aria-hidden="true"></a><span class="co">#&gt;   &lt;chr&gt;        &lt;bch:&gt; &lt;bch:&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;bch:tm&gt;</span></span>
+<span id="cb10-43"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-43" aria-hidden="true"></a><span class="co">#&gt; 1 sequential_~  5.11s  5.35s     0.187    3.74GB     11.0     2   118      10.7s</span></span>
+<span id="cb10-44"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-44" aria-hidden="true"></a><span class="co">#&gt; 2 parallel_sd   4.37s  4.38s     0.228    2.83MB      0       3     0      13.2s</span></span>
+<span id="cb10-45"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-45" aria-hidden="true"></a><span class="co">#&gt; # ... with 4 more variables: result &lt;list&gt;, memory &lt;list&gt;, time &lt;list&gt;,</span></span>
+<span id="cb10-46"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb10-46" aria-hidden="true"></a><span class="co">#&gt; #   gc &lt;list&gt;</span></span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAGgCAMAAABCCiVqAAAA/FBMVEUAAAAAADoAAGYAOpAAZrYAv8QzMzM6AAA6ADo6AGY6OpA6kNtNTU1NTW5NTY5Nbo5NbqtNjo5NjqtNjshmAABmADpmAGZmZrZmtv9uTU1uTW5uTY5ubo5ubqtuq6tuq8huq+R8rgCOTU2OTW6OTY6Obk2Obm6Ojm6OyP+QOgCQOjqQOmaQZgCQkGaQtpCQ2/+rbk2rbm6rjk2rq26rq46ryKur5OSr5P+2ZgC2Zma22/+2///HfP/Ijk3I5KvI///bkDrb2//b/7bb/9vb///kq27k///r6+vy8vL4dm3/tmb/yI7/25D/27b/5Kv//7b//8j//9v//+T///9O9k//AAAACXBIWXMAAA7DAAAOwwHHb6hkAAATdUlEQVR4nO2dD3/TVpqFDYXSFsOwQ2cX2u0uoXQGZmdK2D8TdiGT7ExhliQDSfT9v8vqynJsJ68lW7rnRDqc50cqx9fyifs+v6t7ZV95UhgzYCbX/QcY04QFNYPGgppBY0HNoLGgZtBYUDNo2IL+7W/lv0Za2vvs3rWtZ6wuBGEsKD5WF4IwFhQfqwtBGAuKj9WFIIwFxcfqQhDGguJjdSEIY0HxsboQhLGg+FhdCMJYUHysLgRhLCg+VheCMBYUH6sLQRgLio/VhSCMBcXH6kIQxoLiY3UhCGNB8bG6EISxoPhYXQjCWFB8rC4EYSwoPlYXgjAWFB+rC0EYC4qP1YUgjAXFx+pCEMaC4mN1IQhjQfGxuhCEsaD4WF0IwlhQfKwuBGEsKD5WF4IwFhQfqwtBGAuKj9WFIIwFxcfqQhDGguJjdSEIY0HxsboQhLGg+FhdCMJYUHysLgRhLCg+VheCMBYUH6sLQRgLio/VhSCMBcXH6kIQxoLiY3UhCGNB8bG6EISxoPhYXQjCWFB8rC4EYSwoPlYXgjAWFB+rC0EYC4qP1YUgjAXFx+pCEMaC4mN1IQhjQfGxuhCEsaD4WF0IwlhQfKwuBGEsKD5WF4IwFhQfqwtBGAuKj9WFIMx4BN3Z2Wlqbtu9T1vPWF0IwoxG0J2dmaEWdEAQhLGgG7T1jNWFIIwF3aCtZ6wuBGFGI6jHoAOEIMx4BN2s2YIyIQhjQfGxuhCEsaD4WF0IwlhQfKwuBGEsKD5WF4IwFhQfqwtBGAuKj9WFIIwFxcfqQhDGguJjdSEIY0HxsboQhLGg+FhdCMJYUHysLgRhBi3o7du3m5rbds/W1jNWF4IwQxb09u3AUAs6IAjCWNDNnteCRhCEsaCbPa8FjSAIM2RBPQYdOgRhBi1oh2YLyoQgjAXFx+pCEMaC4mN1IQjzeQhaD2YtaGYIwnwWgs5PB1jQzBCEsaC4WH0IwlhQXKw+BGHGIWh90YZ1zW27ewwKgiDMKASdX/ZmTXPb7r3besbqQhDGgm72vBY0giCMBd3seS1oBEGYUQjaewzas61nrC4EYcYh6ObNFpQJQRgLio/VhSCMBcXH6kIQxoLiY3UhCGNB8bG6EISxoPhYXQjCWFB8rC4EYSwoPlYXgjAWFB+rC0EYNUHfvn3bbV8L2gGCMDkE/fj9Qflv8cvVR5zvPq9vgQV9+7bJUAuamQzytJFJ0DW/zGkWdHX5uwUdDxnkaaNB0OPp9H4p2+nT+ebXr/aSfulndufHH/59On2ebv853f+4/GVZ0LLhV7/dqzY/NQh66QIiFnQ8gOVMrBf09NlB8e5hUew/SZvz3XJz70LQ2Z0fHz8pjh+8nx3iT3/cWz3Ypwcd39urNtMk6JclQVAlaK7XU/qZ66nMEGgQtBSu3pSuJl3Lm7Wg9Z31bwst6/vqJyh3OX+1V22aDvE5e1DP4qlA1ZzRcIgvD9n3qgP0tNx+/OF9sm0uaH3nqqD7aUywNF1a7FLsk8agFpQK2s6ibZJUHr9TB1jMusOlHnR254qgp0+frx7iN+1BL7/oXs0WlAlMywXrBS3lrH72n8w35Rg0Hdvf3T+o71wRtPrlu72GMWjCgiqBtrNo7EH3L2bxpWVp8w/Jzun0X54d1HfWgp7vVrP4sqmcra/O4suJf9l9Ns/iL7/oXs0WlAlYzsQ250HradM2XDkrakGV2FaHDgAETedD0xzqT7vTqu9dwYIqsYU8XVF7L96CMiEIoy3opbeVLGhmCMJIC3r5jU8LmhmCMBY0f+znA0EYC5o/9vOBIIy0oMEYNPpmm+yxnw0EYcYi6MXVmfrN4sPvBtvkeS1oBEGY4QkaGrS4vp0FHRAEYQYnaKyQBR0kBGE+M0E9Bs0KQZiRCJprDNqtrWesLgRhBifo+j6u/n/S9v8M0NYzVheCMMMT1O/FjweCMBYUH6sLQRgLio/VhSCMBcXH6kIQxoLiY3UhCGNB8bG6EIQZpaBNZ6IsKBGCMGMUdP37lS27W9DMEISxoBvH9mrXhCCMBd04tle7JgRhxiiox6BDgSDMKAXt2m5BM0MQxoLiY3VZU+RP305u/Pz1m+LsxWRyq6cwFhQfq0tc40/f3i1/br45e3Gr3D7qJ4wFxcfqEtf46Oaboji8+ebkq5f9hbGg+Fhd4hoffvFLUZx8/aYStS8WFB+rS1xjC9q13YJmJq5xJeaRD/Hbt1vQzMQ1Xp4kpZ9eWFB8rC5ripxOM/3xpk8zbd1uQTPTUOijNBDNgAXFx+oS1/joxsv+h/Y5FhQfq8uaIh9O+h/a51hQfKwuBGEsKD5WF4Iwgxf08kfrLOiAIAgzdEGvfDjZgg4IgjAWdLPntaARBGFWBD25M0nkeAt1HRZUibjG/xfTTZhlQbOdu2rAY1Al4hrDBO394dIN8CxeibjGwB7UgiJidYlrDBO0yPIBvmYsqBJxjYGH+MngJknbNltQJnGNcT0oAQuqRFxjC9q13YJmJq4xUND0MZTJ3W7PtBkWVIm4xjhBD9PoM31gH4cFVSKu8cLJDx8+5J0kVaeZoHN5C6pEXONlP5cMrVtPvvnDZPKompKXoq3+FmBB8bG6xDVuEfTO3Wo9yOtqs/TbYfg+pg/x+Fhd4hq3CPr1m/Tz6R/fFJ9+83L+229eFumeq3iShI/VJa5x8xi0VjJtzn5/IWg6BX8jWkbv00z4WF3iGjfP4uMeNOw9ExYUH6tLXOONBJ2PQVd+C57sQtByhuS3OjGxusQ13kzQeha/+C08wrsHJcTqEte4WdAtsaD4WF3iGuMEnR3moZ+5s6BKxDXGCfr6VjoVGp8wzYQFVSKuMUzQsgNNy5L8TlLmWF3iGiMFTW8jWdDMsbrENYYJevbibrow2Wsf4vPG6hLXGDcGPbkzuVW8znRhxxgLqkRcY5ygBCyoEnGNLWjXdguambjGOEF9HhQSq0tcY5ygPg8KidUlrjFMUJ8HxcTqEtcYKajPgwJidYlrDBPU50ExsbrENcaNQX0eFBKrS1zjZkHTpz+vUn8m9Kp7Ps2Ej9UlrvHCyZ2dnc0FTRdXvDpBt6D4WF3iGi/7uWRo3XrxafqTb35Jy+YuPlmf1iVdtffKqs5Hhz7EZ47VJa5xu6DVKvhSzqKUdLYiPq3zLIVNy49XWT0P+sVfZmeacFhQJeIatwpar4I/LNW8W99OXy//RZug1WmmRz7NlDtWl7jGrWPQehX8yTd/rY7w1e1NelALionVJa5x6yy+XgV/9vufv/mlvr3ZGPQwHeJ96ZvcsbrENW4/zVSvgj9MV7G5WB9/9iK6PtPqJOnIl74BxOoS17hd0HoV/MlXL4v6ts+D9mnrGatLXONmQbfEX0ODj9UlrjFMUH+RFyZWl7jGMEEL7Dn6CguqRFxjYA/qi4chYnWJa4zrQQlYUCXiGlvQru0WNDNxjYGCVpcAh86ULKgScY2BkyR/iQIiVpe4xsBJkr+GBhGrS1xjC9q13YJmJq4x7hCflsz5EJ89Vpe4xsAedDIH1olaUCXiGgNn8XgsqBJxjWGCnv1vt+fYBguqRFzjZkHXLzsO21YP8dXo8+zfPEnKGqtLXOOFk7dv395G0KNgaLk6SUofGI0elQ8LqkRc42U/lwytW9cuOy5e3/i5uQetp0nIRZ0WVIq4xu2ChsuOi9ZDfFFd/Aa64sOCShHXuFXQeNlx0S7o2YvJraNgXUhGLKgScY1bx6DxsuNig0nS7ES9x6B5Y3WJa9w6i4+XHRftgv7TbPvfFjRrrC5xjdtPM4XLjotNxqBwLKgScY3bBY2XHW8gqC8ehojVJa5xs6Bb4ouH4WN1iWsME9TXZsLE6hLX2IJ2bbegmYlrjDvE++JhkFhd4hrjBPXFwyCxusQ1BgqKx4IqEdfYgnZtt6CZiWtsQbu2W9DMxDW2oF3bLWhm4hpb0K7tFjQzcY0taNd2C5qZuMYWtGu7Bc1MXGML2rXdgmYmrrEF7dpuQTMT17hZ0PWrOk/uBJdWtKD4WF3iGi+cfPv27eaCptVJ1SdEV7Cg+Fhd4hov+7lkaN26dtnxUfqY5+vLXagFxcfqEte4XdB1y47bvu2YgAVVIq5xq6Brlx2nb0O8hAXFx+oS17h1DLpu2XH0SU8Lio/VJa5x6yx+zbLjkzvB1yNYUHysLnGN208zhcuOQz8tKCFWl7jG7YKGy46rr5i5ciLUguJjdYlr3CzollhQfKwucY0taNd2C5qZuMYWtGu7Bc1MXGML2rXdgmYmrrEF7dpuQTNDEMaC4mN1IQhjQfGxuhCEsaD4WF0IwlhQfKwuBGEsKD52zHz48KGhlSCMBcXHjpgPHxoNJQhjQfGxI6YWdJ2lBGEsKD52xMwEXduPEoSxoPjYMTPvQC3o4kX3aragACzoyovu1WxBEXgMuvyiezVbUCYEYSwoPlYXgjAWFB+rC0EYC4qP1YUgjAXFx+pCEMaC4mN1IQhjQfGxuhCEsaD4WF0IwlhQfKwuBGEsKD5WF4IwFhQfqwtBmByCfvz+oPy3+OXqI853n9e3LKgSGeRpw4LiY0dK82qPigzytLG9oKfP/mN6b6808fF0+rz4+M8/3f/zTNDTp9P7B8uClnf86rd71eYnCzo2WlZ7VOSysIEOgj598P74/sHpj3tV1/n4+bwH3X9SvHu4LGh5x3GpctpMk6BfluT82w2SStDr/iO6Cfq8OH+1V918Vpk5EzQZW99RP/DZQXpgtfEhfnSMtwctRSz2S+H2p+UhfUnQp9NpeexfGo3+8D4JWt2xb0FHx2jHoKWgqWN8enFsrwV9VpnpHvQzIpOETXQ5xD8sjh+8r8z8bm8haDXWnN1fc3kMmrCgSuSysIEuPejvqln8u2manC8JWh7j7+1dmsX/uhysnu96Fi9KLgsb6DgG3ZQrZ0UtqBJby7M9AEHTCdI0X/rT7rTqalewoEpsLc/2+L14fKwuBGEsKD5WgficE0EYC4qPFWDNWXuCMBYUHyuABV160b2aLSgEC7r0ons1W1AMHoMuXnSvZgvKhCCMBcXH6kIQxoLiY3UhCGNB8bG6EISxoPhYXQjCWFB8rC4EYSwoPlYXgjAWFB+rC0EYC4qP1YUgjAXFx46W1mVzBGEsKD52rLQvPCYIY0HxsWPFgsYvulezBc2HBY1fdK9mC5oRj0HDF92r2YIyIQhjQfGxuhCEsaD4WF0IwlhQfKwuBGEsKD5WF4IwFhQfqwtBGAuKj9WFIIwFxcfqQhDGguJjdSEIY0HxsboQhLGg+FhdCMJYUHysLgRhLCg+VheCMBYUH6sLQRgLio/VhSCMBcXH6kIQxoLiY0fPzs5O3EAQxoLiY8fOzs46QwnCWFB87NixoKsvulezBc2PBV190b2aLSgAj0FXXnSvZgvKhCCMBcXH6kIQxoLiY3UhCGNB8bG6EISxoPhYXQjCWFB8rC4EYSwoPlYXgjAWFB+rC0EYC4qP1YUgjAXFx+pCEMaC4mN1IQhjQfGxuhCEsaD4WF0IwlhQfKwuBGEsKD5WF4IwFhQfqwtBGAuKj9WFIIwFxcfqQhDGguJjdSEIY0HxsboQhLGg+FhdCMJYUHysLgRhLCg+VheCMBYUH6sLQRgLio/VhSCMBcXH6kIQxoLiY3UhCGNB8bG6EISxoPhYXQjCWFB8rC4EYSwoPlYXgjAWFB+rC0EYC4qP1YUgjAXFx+pCEMaC4mN1IQhjQfGxuhCEsaD4WF0IwlhQfKwuBGEsKD5WF4IwFhQfqwtBGAuKj9WFIIwFxcfqQhDGguJjdSEIY0HxsboQhLGg+FhdCMJYUHysLgRhLCg+VheCMBYUH6sLQRgLio/VhSCMBcXH6kIQhi1oO19ez+49Yw0IC5on1oCwoHliDQgLmifWgBieoMYsYUHNoLGgZtBYUDNoLKgZNNcs6MfH0/sHRXH6dPrg/cWGtvvF03x/0GU3Q+B6BT39ca949+D9+e7z4t3Dot5ssfvT5312n3NcWW4GyfUK+vGH98Xps4PyX+rF6s35q/+cTp8clz/JnSZ5qt1/3Ou6e83+vf9KPehGjzVsBtGD1qLVm/Pdh+Wx++HcuYZOcXW/rXdfPE8p6KaPNVyueQw6GzYeP6jUqjfnr/aK9JP6xlLgxr3Lg/q9va67X1AJuuFjDZdrPsR/t1cc3z+41AUuDEuzoHsN4pTN//rqcg+6+e4XT5MO8Rs+1nC5XkHrTu/yIHJhWP2YBoIh7Da7V8xn8Zs81nAZRA96vvtkNg2fbRaGHdfH/zVUQ9jFftvuvvgzSkE3fazhcs1j0HLqnI6rKycyl7vA/eapdbn70gnQrXefU/WgGz7WcPE7SWbQWFAzaCyoGTQW1AwaC2oGjQU1g8aC5uLv/1OcfPXyuv8KOSxoJiwnBguaCQuKwYLm4eTOZHK3lPTkq5+rW+V/HhXF2YvJ5Oab6/7bRo0FzUTqQZOgd774pTicpP/cfHP24lZRHJa3TWcsaCYuBH2UutNH1R1Hqff89O2j6/7bxowFzcRc0DQUnf/ncFJx97r/tjFjQTMRCuqje28saCYiQY9ueGbfFwuaiTTUvCzo2YuyC7WlvbCguXg9uXVZ0Oo0k/3shQU1g8aCmkFjQc2gsaBm0FhQM2gsqBk0FtQMGgtqBo0FNYPGgppB8/9niMzj6UCGRgAAAABJRU5ErkJggg==" style="display: block; margin: auto;"><img src="data:image/png;base64,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" style="display: block; margin: auto;"></p>
+<p>It can be observed that, considering the current example, the parallel computing is convenient for steepest descent method, whereas it increases the computation time for the gradient descent one. For this last case, since also distributing the calculation has a time impact, it can happen that it more than compensates the time saving obtained splitting the procedure on more cores.</p>
+<p>In order to fully appreciate the benefit of the parallel computing, we can set a more computational intensive example, increasing the sample size from 1000 to 10000, and the number of folds from 5 to 10.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-1" aria-hidden="true"></a></span>
+<span id="cb11-2"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-2" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb11-3"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-3" aria-hidden="true"></a>n &lt;-<span class="st"> </span><span class="dv">10000</span></span>
+<span id="cb11-4"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-4" aria-hidden="true"></a>x1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb11-5"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-5" aria-hidden="true"></a>x2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb11-6"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-6" aria-hidden="true"></a>Y &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span><span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span><span class="fl">0.2</span><span class="op">*</span>x2 <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb11-7"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-7" aria-hidden="true"></a>X &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">rep</span>(<span class="dv">1</span>,n),x1,x2)</span>
+<span id="cb11-8"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-8" aria-hidden="true"></a>par &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">dim</span>(X)[<span class="dv">2</span>])</span>
+<span id="cb11-9"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-9" aria-hidden="true"></a>K &lt;-<span class="st"> </span><span class="dv">10</span></span>
+<span id="cb11-10"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-10" aria-hidden="true"></a></span>
+<span id="cb11-11"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-11" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb11-12"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-12" aria-hidden="true"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb11-13"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-13" aria-hidden="true"></a>  <span class="dt">sequential_gd =</span> <span class="kw">round</span>(<span class="kw">my_k_fold_cv</span>(par, X, Y, K),<span class="dv">1</span>),</span>
+<span id="cb11-14"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-14" aria-hidden="true"></a>  <span class="dt">parallel_gd =</span> <span class="kw">round</span>(<span class="kw">my_k_fold_cv</span>(par, X, Y, K, <span class="dt">parallel =</span> <span class="ot">TRUE</span>),<span class="dv">1</span>),</span>
+<span id="cb11-15"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-15" aria-hidden="true"></a>  <span class="dt">filter_gc =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb11-16"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-16" aria-hidden="true"></a>  <span class="dt">min_time =</span> <span class="dv">100</span></span>
+<span id="cb11-17"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-17" aria-hidden="true"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb11-18"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-18" aria-hidden="true"></a><span class="st">  </span><span class="kw">show_bm</span>()</span>
+<span id="cb11-19"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-19" aria-hidden="true"></a><span class="co">#&gt; # A tibble: 2 x 13</span></span>
+<span id="cb11-20"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-20" aria-hidden="true"></a><span class="co">#&gt;   expression      min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time</span></span>
+<span id="cb11-21"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-21" aria-hidden="true"></a><span class="co">#&gt;   &lt;chr&gt;        &lt;bch:&gt; &lt;bch:&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;bch:tm&gt;</span></span>
+<span id="cb11-22"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-22" aria-hidden="true"></a><span class="co">#&gt; 1 sequential_~  7.86s  8.15s     0.123   10.19GB  19.8       13  2094      1.76m</span></span>
+<span id="cb11-23"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-23" aria-hidden="true"></a><span class="co">#&gt; 2 parallel_gd   5.55s  5.87s     0.171    4.33MB   0.0190    18     2      1.75m</span></span>
+<span id="cb11-24"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-24" aria-hidden="true"></a><span class="co">#&gt; # ... with 4 more variables: result &lt;list&gt;, memory &lt;list&gt;, time &lt;list&gt;,</span></span>
+<span id="cb11-25"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-25" aria-hidden="true"></a><span class="co">#&gt; #   gc &lt;list&gt;</span></span>
+<span id="cb11-26"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-26" aria-hidden="true"></a></span>
+<span id="cb11-27"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-27" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb11-28"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-28" aria-hidden="true"></a>bench<span class="op">::</span><span class="kw">mark</span>(</span>
+<span id="cb11-29"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-29" aria-hidden="true"></a>  <span class="dt">sequential_gd =</span> <span class="kw">round</span>(<span class="kw">my_k_fold_cv</span>(par, X, Y, K, <span class="dt">method =</span> <span class="st">"sd"</span>),<span class="dv">1</span>),</span>
+<span id="cb11-30"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-30" aria-hidden="true"></a>  <span class="dt">parallel_gd =</span> <span class="kw">round</span>(<span class="kw">my_k_fold_cv</span>(par, X, Y, K, <span class="dt">method =</span> <span class="st">"sd"</span>, <span class="dt">parallel =</span> <span class="ot">TRUE</span>),<span class="dv">1</span>),</span>
+<span id="cb11-31"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-31" aria-hidden="true"></a>  <span class="dt">filter_gc =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb11-32"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-32" aria-hidden="true"></a>  <span class="dt">min_time =</span> <span class="dv">100</span></span>
+<span id="cb11-33"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-33" aria-hidden="true"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb11-34"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-34" aria-hidden="true"></a><span class="st">  </span><span class="kw">show_bm</span>()</span>
+<span id="cb11-35"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-35" aria-hidden="true"></a><span class="co">#&gt; # A tibble: 2 x 13</span></span>
+<span id="cb11-36"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-36" aria-hidden="true"></a><span class="co">#&gt;   expression      min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time</span></span>
+<span id="cb11-37"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-37" aria-hidden="true"></a><span class="co">#&gt;   &lt;chr&gt;       &lt;bch:t&gt; &lt;bch:&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;bch:tm&gt;</span></span>
+<span id="cb11-38"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-38" aria-hidden="true"></a><span class="co">#&gt; 1 sequential~   1.06m  1.06m    0.0157   70.44GB     9.61     2  1223      2.12m</span></span>
+<span id="cb11-39"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-39" aria-hidden="true"></a><span class="co">#&gt; 2 parallel_gd  39.24s  40.1s    0.0250    4.33MB     0        3     0         2m</span></span>
+<span id="cb11-40"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-40" aria-hidden="true"></a><span class="co">#&gt; # ... with 4 more variables: result &lt;list&gt;, memory &lt;list&gt;, time &lt;list&gt;,</span></span>
+<span id="cb11-41"><a href="file:///C:/Users/662984/AppData/Local/Temp/RtmpYRKzZ1/preview-140b453e74958.dir/myOpt_usage_v2.html#cb11-41" aria-hidden="true"></a><span class="co">#&gt; #   gc &lt;list&gt;</span></span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;"><img src="data:image/png;base64,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" style="display: block; margin: auto;"></p>
+<p>Considering this more computational intensive example, it can be noted that the parallel computing allows to save time also using the gradient descent method.</p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>7. Conclusions</h2>
+<p>This document shows how to apply the functions to estimate the linear regression parameters, implemented in this package, based on the gradient descent and the steepest descent methods.</p>
+<p>Several examples are reported, including comparisons and benchmarks between the two implemented methods, and versus the standard function “lm”. All the provided results agree on the fact that the implemented methods are comparable, in terms of accuracy, with respect to the standard function.</p>
+<p>In terms of computation time, gradient descent method is faster than the steepest descent one, because of the simpler step calculation at each iteration. It can observed that, even if it is still slower, the gradient descent method reaches computation times which are comparable to the standard function, keeping (at least, on considered examples) an order of fractions of seconds.</p>
+<p>The prediction of the gradient descent and the steepest descent methods is evaluated, showing that their in-sample prediction error is comparable to the one of the standard function.</p>
+<p>Some examples of k-fold cross validation are reported, showing how to optimize the calculations using the parallel computing. These examples show that the implemented gradient descent and steepest descent methods have also a comparable out-of-sample prediction error.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+
+
+</body></html>
