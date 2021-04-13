@@ -1,11 +1,14 @@
 ---
 title: "myOpt package to fit linear models"
-author: "Aiello Luca, Piacenza Fabio"
-output: rmarkdown::html_vignette
+author: "Luca Aiello, Fabio Piacenza"
+output: 
+  pdf_document: default
+  #rmarkdown::html_vignette
+  word_document: default
 vignette: >
   %\VignetteIndexEntry{myOpt_usage}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = FALSE}
@@ -22,7 +25,7 @@ The goal of myOpt package is to provide users an efficient way to estimate param
 
 ## 2. Gradient descent method
 
-In the following lines, the results and the computation times are compared,  using the function of this package for gradient descent method ("linear_gd_optim") and the standard one ("lm").
+In the following lines, the results and the computation times are compared,  using the function of this package for gradient descent method ("linear_gd_optim") and the standard one ("lm" from the "stats" core package).
 
 ```{r setup}
 library(myOpt)
@@ -59,7 +62,8 @@ lm_par
 ```
 
 As it is possible to notice, the results are quite the same, meaning that the accuracy of the method implemented is, in terms of results, comparable to the standard one. 
-Now let's benchmark the vectorized version of the the function "linear_gd_optim" versus the one using only for loops.
+
+Now let's benchmark the above used vectorized version of the gradient descent method (function "linear_gd_optim") versus the one using for loops (function "linear_gd_optim_old").
 
 ```{r, fig.show="hold", fig.align = "center", fig.width = 7, fig.asp = .62}
 
@@ -86,21 +90,25 @@ print_bench <- function(bm) {
 ## Benchmarks 
 
 bench::mark(
-  vec_method = linear_gd_optim(par, X, Y),
-  for_method = linear_gd_optim_old(par, X, Y),
+  lm_method = round(lm(Y ~ x1 + x2)$coefficients,1),
+  vec_method = round(linear_gd_optim(par, X, Y),1),
+  for_method = round(linear_gd_optim_old(par, X, Y),1),
   filter_gc = FALSE,
+  min_time = 10
 ) %>%
   show_bm()
 ```
 
-From the benchmarks it is possible to see how the vectorized version of the function performs much faster than the other one; this allows our function to compete with the standard one "lm" not only in terms of result accuracy but also in terms of computation times.
+From the benchmarks, it is possible to see how the vectorized version of the function performs much faster than the loops-based one; this allows our function to compete with the standard one "lm" not only in terms of result accuracy but also in terms of computation times.
+In fact, "lm" is still the fastest one (being based on C code internal functions), but "linear_gd_optim" still remains (for this example) within the fractions of a second.
+On purposes of comparison, these calculations are executed using a processor Intel(R) Xeon(R) CPU E5-2690 v2 @ 3.00GHz (4 logical processors) with RAM 24.0 GB, Windows 7 64-bit Operating System, and R version 4.0.2.
 
 
 ## 3. Steepest descent method
 
 The parameters of the linear model can also be calculated with the steepest descend method, using the function "linear_sd_optim" implemented in this package.
 
-The example of the previous section is repeated applying the steepest descend method, comparing results and computation times with the gradient descent method and the standard function "lm".
+The example of the previous section is repeated applying the steepest descend method, comparing results with the gradient descent method and the standard function "lm".
 
 ```{r setup sd}
 library(myOpt)
@@ -137,7 +145,8 @@ lm_par
 ```
 
 It can be noted that the results are quite similar, meaning that also the accuracy of the implemented steepest descent is, in terms of results, comparable to the standard function "lm". 
-We proceed benchmarking the functions "linear_gd_optim" (based on the gradient descent) and "linear_sd_optim" (based on the steepest descent).
+
+We proceed benchmarking the functions "linear_gd_optim" (based on the gradient descent) and "linear_sd_optim" (based on the steepest descent) with "lm" (the standard one).
 
 ```{r, fig.show="hold", fig.align = "center", fig.width = 7, fig.asp = .62}
 
@@ -164,23 +173,25 @@ print_bench <- function(bm) {
 ## Benchmarks 
 
 bench::mark(
+  lm_method = round(lm(Y ~ x1 + x2)$coefficients,1),
   gd_method = round(linear_gd_optim(par, X, Y),1),
   sd_method = round(linear_sd_optim(par, X, Y),1),
   filter_gc = FALSE,
+  min_time = 10
 ) %>%
   show_bm()
 
 ```
 
-From the benchmarks it is again possible to observe that the gradient descent method is faster than the steepest descent one, in front of a comparable accuracy. 
-This is essentially due to the additional operations that the steepest descent has to perform at each iteration of the optimization procedure to calculate the step, compared to the gradient method.
+From the benchmarks, it is possible to observe that the gradient descent method is faster than the steepest descent one, in front of a comparable accuracy. 
+This is essentially due to the additional operations that the steepest descent method has to perform at each iteration of the optimization procedure to calculate the step, compared to the gradient descent one.
 
 
 ## 4. Gradient and steepest descent methods using more predictors
 
-This section shows that the gradient and steepest descent methods, implemented in this package, work using even more than two predictors. 
+This section shows that the steepest gradient and the steepest descent methods, implemented in this package, work using even more than two predictors. 
 
-A new example, including three predictors, is reported in this section section applying the gradient and the steepest descend methods, comparing results and computation times with the standard function "lm".
+A new example, including three predictors, is reported in this section section applying the gradient descend and the steepest descend methods, comparing results with the standard function "lm".
 
 ```{r setup three predictors}
 library(myOpt)
@@ -220,8 +231,9 @@ opt_par_sd
 lm_par
 ```
 
-It can be noted that the results are quite similar, meaning that also the accuracy of the implemented steepest gradient and steepest descent methods are, in terms of results, comparable to the standard function "lm", also using three predictors. 
-We proceed benchmarking the functions "linear_gd_optim" (based on the gradient descent) and "linear_sd_optim" (based on the steepest descent) using three predictors.
+It can be noted that the results are quite similar, meaning that the accuracy of the implemented steepest gradient and steepest descent methods is, in terms of results, comparable to the standard function "lm", also using three predictors. 
+
+We proceed benchmarking the functions "linear_gd_optim" (based on the gradient descent) and "linear_sd_optim" (based on the steepest descent) with "lm" (the standard one) using three predictors.
 
 ```{r, fig.show="hold", fig.align = "center", fig.width = 7, fig.asp = .62}
 
@@ -247,15 +259,17 @@ print_bench <- function(bm) {
 ## Benchmarks 
 
 bench::mark(
+  lm_method = round(lm(Y ~ x1 + x2 + x3)$coefficients,1),
   gd_method = round(linear_gd_optim(par, X, Y),1),
   sd_method = round(linear_sd_optim(par, X, Y),1),
   filter_gc = FALSE,
+  min_time = 10
 ) %>%
   show_bm()
 
 ```
 
-The benchmarks confirm that the gradient descent method is faster than the steepest descent one, in front of a comparable accuracy, also using three predictors.
+The benchmarks confirm that the gradient descent method is faster than the steepest descent one, in front of a comparable accuracy, also using three predictors, and that "lm" remains the fastest one.
 
 
 ## 5. Prediction
@@ -294,7 +308,7 @@ It is possible to see how the three methods give similar results in terms of pre
 
 In order to estimate how accurately the predictive model will perform in practice, cross validation techniques can be used.
 In particular, the k-fold cross validation is implemented in the myOpt package to assess the predictions of the gradient and steepest descent methods.
-The function "my_k_fold_cv" can be used on this purpose for both methods, depending on the value of the argument "method" (to be set "gd" for gradient descent, and to "sd" for steepest descent).
+The function "my_k_fold_cv" can be used on this purpose for both methods, depending on the value of the argument "method" (to be set to "gd" for gradient descent, and to "sd" for steepest descent).
 
 ```{r}
 library(doSNOW)
@@ -309,16 +323,17 @@ my_k_fold_cv(par, X, Y, K, method = "sd")
 We can observe that the two methods have very similar prediction errors, which are, as expected, a bit higher than the in-sample errors calculated in the previous section.
 
 The function "my_k_fold_cv" can also perform a parallel calculation.
-It is sufficient to set the argument "parallel" equal to TRUE to move from the sequential to the parallel computing, distributing the calculation on all the available cores.
-We can analyze the effect of the parallel computing on the calculation times.
+It is sufficient to set the argument "parallel" equal to TRUE to move from the sequential to the parallel computing, distributing the calculation on all the available cores (which are 4 in this example).
+The impact of the parallel computing on the calculation times is analyzed below.
 
-```{r}
+```{r, fig.show="hold", fig.align = "center", fig.width = 7, fig.asp = .62}
 
 ## Useful functions
 
-# Print a benchmark
+# Plot a benchmark
 show_bm <- function(bm) {
-  print(print_bench(bm)) 
+  print(print_bench(bm))
+  autoplot(bm)
 }
 
 # printable bench (for RMarkdown)
@@ -332,6 +347,7 @@ bench::mark(
   sequential_gd = round(my_k_fold_cv(par, X, Y, K),1),
   parllel_gd = round(my_k_fold_cv(par, X, Y, K, parallel = TRUE),1),
   filter_gc = FALSE,
+  min_time = 10
 ) %>%
   show_bm()
 
@@ -340,16 +356,17 @@ bench::mark(
   sequential_sd = round(my_k_fold_cv(par, X, Y, K, method = "sd"),1),
   parallel_sd = round(my_k_fold_cv(par, X, Y, K, method = "sd", parallel = TRUE),1),
   filter_gc = FALSE,
+  min_time = 10
 ) %>%
   show_bm()
 
 ```
 
-We observe that, considering the current example, the parallel computing is convenient for steepest descent method, whereas it increases the computation time for the gradient descent one. 
-For this last case, since also distributing the calculation has a time impact, it can happen that it more than compensate the time saving obtained splitting the procedure on more cores.
+It can be observed that, considering the current example, the parallel computing is convenient for steepest descent method, whereas it increases the computation time for the gradient descent one. 
+For this last case, since also distributing the calculation has a time impact, it can happen that it more than compensates the time saving obtained splitting the procedure on more cores.
 
-In order to fully appreciate the benefit of the parallel computing, we can set a more computational intensive example, increasing the sample size from 1000 to 10000.
-```{r}
+In order to fully appreciate the benefit of the parallel computing, we can set a more computational intensive example, increasing the sample size from 1000 to 10000, and the number of folds from 5 to 10.
+```{r, fig.show="hold", fig.align = "center", fig.width = 7, fig.asp = .62}
 
 set.seed(8675309)
 n <- 10000
@@ -358,28 +375,43 @@ x2 <- rnorm(n)
 Y <- 1 + 0.5*x1 + 0.2*x2 + rnorm(n)
 X <- cbind(rep(1,n),x1,x2)
 par <- rnorm(dim(X)[2])
-K <- 5
+K <- 10
 
 set.seed(8675309)
 bench::mark(
   sequential_gd = round(my_k_fold_cv(par, X, Y, K),1),
   parallel_gd = round(my_k_fold_cv(par, X, Y, K, parallel = TRUE),1),
   filter_gc = FALSE,
+  min_time = 100
+) %>%
+  show_bm()
+
+set.seed(8675309)
+bench::mark(
+  sequential_gd = round(my_k_fold_cv(par, X, Y, K, method = "sd"),1),
+  parallel_gd = round(my_k_fold_cv(par, X, Y, K, method = "sd", parallel = TRUE),1),
+  filter_gc = FALSE,
+  min_time = 100
 ) %>%
   show_bm()
 ```
 
-We note that, increasing the sample size, the parallel computing allows to save time also using the gradient descent method.
+Considering this more computational intensive example, it can be noted that the parallel computing allows to save time also using the gradient descent method.
+
 
 ## 7. Conclusions
 
-This document shows how to apply the functions to estimate the linear regression parameters, implemented in this package, based on the gradient descent and steepest descent methods.
+This document shows how to apply the functions to estimate the linear regression parameters, implemented in this package, based on the gradient descent and the steepest descent methods.
 
 Several examples are reported, including comparisons and benchmarks between the two implemented methods, and versus the standard function "lm".
 All the provided results agree on the fact that the implemented methods are comparable, in terms of accuracy, with respect to the standard function. 
 
 In terms of computation time, gradient descent method is faster than the steepest descent one, because of the simpler step calculation at each iteration.
-We can observe that, even if it is a bit slower, the gradient descent method reaches computation times which are comparable to standard function. 
+It can observed that, even if it is still slower, the gradient descent method reaches computation times which are comparable to the standard function, keeping (at least, on considered examples) an order of fractions of seconds. 
+
+The prediction of the gradient descent and the steepest descent methods is evaluated, showing that their in-sample prediction error is comparable to the one of the standard function.
 
 Some examples of k-fold cross validation are reported, showing how to optimize the calculations using the parallel computing.
+These examples show that the implemented gradient descent and steepest descent methods have also a comparable out-of-sample prediction error.
+
 
