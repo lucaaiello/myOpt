@@ -6,7 +6,7 @@ output:
   #rmarkdown::html_vignette
   word_document: default
 vignette: >
-  %\VignetteIndexEntry{myOpt_usage}
+  %\VignetteIndexEntry{myOpt_usage_2}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
